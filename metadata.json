@@ -1,0 +1,6 @@
+{
+  "name": "KvantLearn",
+  "description": "Каталог учебных материалов по IT и технологиям для учеников ДТ Кванториум на Django 5",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

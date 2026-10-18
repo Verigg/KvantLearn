@@ -1,0 +1,1 @@
+"""KvantLearn applications package."""
