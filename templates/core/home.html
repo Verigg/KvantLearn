@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-b from-indigo-50/70 to-slate-50 border-b border-slate-200 py-16 sm:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-semibold mb-6">
+      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+      <span>Платформа детского технопарка «Кванториум»</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight sm:leading-none">
+      {{ site_settings.hero_title|default:"Изучай IT и технологии в Кванториуме" }}
+    </h1>
+
+    <p class="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+      {{ site_settings.hero_subtitle|default:"Каталог современных практических материалов, созданных наставниками. Выбирай направление, изучай теорию и создавай свои инженерные проекты!" }}
+    </p>
+
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="{% url 'catalog:material_list' %}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center space-x-2">
+        <i data-lucide="compass" class="w-4 h-4"></i>
+        <span>Перейти в каталог материалов</span>
+      </a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:register' %}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm border border-slate-200 shadow-sm transition flex items-center justify-center space-x-2">
+          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          <span>Я педагог (регистрация)</span>
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Быстрые направления (Chips) -->
+    <div class="mt-12 flex flex-wrap items-center justify-center gap-2">
+      <span class="text-xs text-slate-500 font-medium mr-2">Популярные направления:</span>
+      {% for code, label in CATALOG_DIRECTIONS %}
+        <a href="{% url 'catalog:material_list' %}?direction={{ code }}"
+           class="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/50 transition shadow-sm">
+          {{ label }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Последние опубликованные материалы -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Новые учебные материалы</h2>
+      <p class="text-sm text-slate-500 mt-1">Недавно опубликованные курсы и руководства</p>
+    </div>
+    <a href="{% url 'catalog:material_list' %}" class="inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700">
+      <span>Все материалы</span>
+      <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+    </a>
+  </div>
+
+  {% if latest_materials %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {% for material in latest_materials %}
+        {% include "catalog/includes/material_card.html" with material=material %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="folder-open" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-semibold text-slate-800">Пока нет опубликованных материалов</h3>
+      <p class="text-xs text-slate-500 mt-1">Педагоги еще готовят первые курсы.</p>
+    </div>
+  {% endif %}
+</section>
+
+<!-- Блок преимуществ -->
+<section class="bg-white border-y border-slate-200 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="flex items-start space-x-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="book-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Проверенные наставниками знания</h4>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Все материалы составлены педагогами Кванториума и апробированы на реальных занятиях.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="video" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Видео, схемы и примеры кода</h4>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Уроки содержат пошаговые инструкции, синтаксис кода, видеодемонстрации и иллюстрации.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">Быстрый и открытый доступ</h4>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Ученики могут читать любые уроки без обязательной регистрации и в удобном для себя темпе.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

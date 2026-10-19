@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог учебных материалов — {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  
+  <!-- Заголовок и форма поиска -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Каталог материалов</h1>
+      <p class="text-sm text-slate-500 mt-1">Обучающие курсы, инструкции и проекты по направлениям</p>
+    </div>
+
+    <!-- Поиск по названию/описанию -->
+    <form method="get" action="{% url 'catalog:material_list' %}" class="flex items-center space-x-2 w-full md:w-80">
+      {% if current_direction %}
+        <input type="hidden" name="direction" value="{{ current_direction }}">
+      {% endif %}
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </div>
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Поиск по курсам..."
+               class="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+      </div>
+      <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm transition">
+        Найти
+      </button>
+    </form>
+  </div>
+
+  <!-- Фильтры по направлению -->
+  <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+    <a href="{% url 'catalog:material_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+       class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition shadow-sm
+       {% if not current_direction %}bg-indigo-600 text-white{% else %}bg-white text-slate-700 border border-slate-200 hover:bg-slate-50{% endif %}">
+      Все направления
+    </a>
+    {% for code, label in CATALOG_DIRECTIONS %}
+      <a href="{% url 'catalog:material_list' %}?direction={{ code }}{% if search_query %}&q={{ search_query }}{% endif %}"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition shadow-sm
+         {% if current_direction == code %}bg-indigo-600 text-white{% else %}bg-white text-slate-700 border border-slate-200 hover:bg-slate-50{% endif %}">
+        {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Сетка карточек -->
+  {% if materials %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {% for material in materials %}
+        {% include "catalog/includes/material_card.html" with material=material %}
+      {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% include "includes/pagination.html" %}
+
+  {% else %}
+    <div class="text-center py-20 bg-white rounded-2xl border border-slate-200 shadow-sm max-w-lg mx-auto">
+      <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="search-x" class="w-7 h-7"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-800">Материалы не найдены</h3>
+      <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска или сбросить фильтр.</p>
+      <div class="mt-5">
+        <a href="{% url 'catalog:material_list' %}" class="inline-flex items-center space-x-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span>Сбросить все фильтры</span>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

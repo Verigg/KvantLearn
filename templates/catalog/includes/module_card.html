@@ -1,0 +1,27 @@
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+  <!-- Заголовок модуля -->
+  <div class="bg-slate-50/80 px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">
+        {{ forloop.counter|default:module.order }}
+      </span>
+      <h3 class="font-semibold text-slate-900 text-sm sm:text-base">
+        {{ module.title }}
+      </h3>
+    </div>
+    <span class="text-xs text-slate-500 font-medium">
+      {{ module.lessons.count }} {% if module.lessons.count == 1 %}урок{% elif module.lessons.count < 5 %}урока{% else %}уроков{% endif %}
+    </span>
+  </div>
+
+  <!-- Список уроков модуля -->
+  <div class="divide-y divide-slate-100">
+    {% for lesson in module.lessons.all %}
+      {% include "catalog/includes/lesson_card.html" with lesson=lesson material=material %}
+    {% empty %}
+      <div class="p-4 text-center text-xs text-slate-400">
+        В этом модуле пока нет уроков.
+      </div>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,23 @@
+{% if is_paginated %}
+  <div class="flex items-center justify-center space-x-2 mt-10">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% if current_direction %}&direction={{ current_direction }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_role %}&role={{ current_role }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}"
+         class="inline-flex items-center px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition shadow-sm">
+        <i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>
+        <span>Назад</span>
+      </a>
+    {% endif %}
+
+    <span class="px-4 py-2 text-sm text-slate-600 font-medium bg-white rounded-xl border border-slate-200 shadow-sm">
+      Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if current_direction %}&direction={{ current_direction }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_role %}&role={{ current_role }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}"
+         class="inline-flex items-center px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition shadow-sm">
+        <span>Вперед</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} — {{ material.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Хлебные крошки -->
+  <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap">
+    <a href="{% url 'core:home' %}" class="hover:text-indigo-600 transition">Главная</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+    <a href="{% url 'catalog:material_list' %}" class="hover:text-indigo-600 transition">Каталог</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+    <a href="{% url 'catalog:material_detail' slug=material.slug %}" class="hover:text-indigo-600 transition truncate max-w-xs">{{ material.title }}</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+    <span class="text-slate-800 font-medium truncate max-w-xs">{{ lesson.title }}</span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Основной контент урока (8 колонок на десктопе) -->
+    <div class="lg:col-span-8">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+        
+        <!-- Заголовок урока и мета-информация -->
+        <div class="border-b border-slate-100 pb-6 mb-8">
+          <div class="flex items-center space-x-2 text-xs text-indigo-600 font-semibold mb-2">
+            <span>{{ lesson.module.title }}</span>
+            <span>&bull;</span>
+            <span>Урок {{ lesson.order }}</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            {{ lesson.title }}
+          </h1>
+
+          <div class="mt-4 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center space-x-1.5">
+              <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span>Автор: <strong>{{ material.author.display_name }}</strong></span>
+            </span>
+
+            {% if user.is_authenticated and user == material.author or user.is_administrator %}
+              <a href="{% url 'editor:lesson_edit' pk=lesson.pk %}"
+                 class="inline-flex items-center space-x-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium bg-indigo-50 px-2.5 py-1 rounded-lg">
+                <i data-lucide="edit-2" class="w-3 h-3"></i>
+                <span>Редактировать урок</span>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Видеоматериал (если указан) -->
+        {% if video_info %}
+          <div class="mb-8">
+            <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-sm">
+              {% if video_info.kind == 'youtube' %}
+                <iframe src="{{ video_info.embed_url }}"
+                        title="{{ lesson.title }}"
+                        class="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+              {% elif video_info.kind == 'iframe' %}
+                <iframe src="{{ video_info.embed_url }}"
+                        title="{{ lesson.title }}"
+                        class="w-full h-full"
+                        allowfullscreen></iframe>
+              {% elif video_info.kind == 'direct_video' %}
+                <video controls class="w-full h-full" preload="metadata">
+                  <source src="{{ video_info.src }}" type="video/mp4">
+                  Ваш браузер не поддерживает встроенное видео.
+                </video>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Иллюстрация к уроку (если загружена) -->
+        {% if lesson.image %}
+          <div class="mb-8">
+            <img src="{{ lesson.image.url }}" alt="{{ lesson.title }}" class="w-full rounded-2xl border border-slate-200 shadow-sm" loading="lazy">
+          </div>
+        {% endif %}
+
+        <!-- Текстовое содержимое (Markdown или простой текст) -->
+        <div class="lesson-content">
+          {% if lesson.content_type == 'markdown' %}
+            <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-slate-900 prose-pre:text-slate-100 prose-pre:rounded-xl prose-img:rounded-xl">
+              {{ lesson.get_rendered_markdown }}
+            </article>
+          {% else %}
+            <div class="text-sm sm:text-base text-slate-700 leading-relaxed whitespace-pre-line">
+              {{ lesson.content|linebreaks }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Навигация: Предыдущий / Следующий урок -->
+        <div class="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {% if prev_lesson %}
+            <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=prev_lesson.pk %}"
+               class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition shadow-sm">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span class="truncate max-w-[200px]">Назад: {{ prev_lesson.title }}</span>
+            </a>
+          {% else %}
+            <div></div>
+          {% endif %}
+
+          <a href="{% url 'catalog:material_detail' slug=material.slug %}"
+             class="text-xs text-slate-500 hover:text-slate-800 font-medium">
+            Оглавление курса
+          </a>
+
+          {% if next_lesson %}
+            <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=next_lesson.pk %}"
+               class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition shadow-sm">
+              <span class="truncate max-w-[200px]">Далее: {{ next_lesson.title }}</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          {% else %}
+            <span class="text-xs text-emerald-600 font-semibold px-3 py-1 bg-emerald-50 rounded-xl">
+              ✓ Курс пройден!
+            </span>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Боковая панель: Оглавление курса (4 колонки на десктопе) -->
+    <div class="lg:col-span-4">
+      <div class="sticky top-24 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+        
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+          <div class="font-bold text-slate-900 text-base">Оглавление курса</div>
+          <a href="{% url 'catalog:material_detail' slug=material.slug %}" class="text-xs text-indigo-600 hover:underline">
+            Обзор
+          </a>
+        </div>
+
+        <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+          {% for mod in modules %}
+            <div>
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                {{ mod.title }}
+              </div>
+              <div class="space-y-1">
+                {% for lsn in mod.lessons.all %}
+                  <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=lsn.pk %}"
+                     class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs transition
+                     {% if lsn.pk == lesson.pk %}
+                       bg-indigo-50 text-indigo-700 font-bold border border-indigo-100
+                     {% else %}
+                       text-slate-600 hover:bg-slate-50 hover:text-slate-900
+                     {% endif %}">
+                    <span class="w-5 h-5 rounded-md flex items-center justify-center text-[10px] flex-shrink-0
+                      {% if lsn.pk == lesson.pk %}bg-indigo-600 text-white{% else %}bg-slate-100 text-slate-500{% endif %}">
+                      {{ forloop.counter }}
+                    </span>
+                    <span class="truncate flex-1">{{ lsn.title }}</span>
+                    {% if lsn.video_url %}
+                      <i data-lucide="video" class="w-3 h-3 text-slate-400 flex-shrink-0"></i>
+                    {% endif %}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

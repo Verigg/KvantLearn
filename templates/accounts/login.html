@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Вход — {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 py-16 sm:px-6">
+  <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+    <div class="text-center mb-8">
+      <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="log-in" class="w-6 h-6"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Вход в систему</h1>
+      <p class="text-sm text-slate-500 mt-1">Доступ к панели управления материалами</p>
+    </div>
+
+    <form method="post" action="{% url 'accounts:login' %}" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-700 space-y-1">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div>
+        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-1">
+          {{ form.username.label }}
+        </label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-1">
+          {{ form.password.label }}
+        </label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <p class="text-xs text-rose-600 mt-1">{{ form.password.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-sm transition flex items-center justify-center space-x-2">
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <span>Войти в аккаунт</span>
+      </button>
+    </form>
+
+    <div class="mt-6 pt-6 border-t border-slate-100 text-center text-sm text-slate-500">
+      Вы педагог Кванториума и у вас нет аккаунта?
+      <a href="{% url 'accounts:register' %}" class="text-indigo-600 font-medium hover:underline block mt-1">
+        Подать заявку на регистрацию
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
