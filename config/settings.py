@@ -138,6 +138,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# For YouTube iframes
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
 # Directions of educational materials
 DIRECTION_CHOICES = [
     ('programming', 'Программирование'),
