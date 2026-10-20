@@ -202,8 +202,12 @@
 
   <!-- Минимальный скрипт бургер-меню и инициализация иконок Lucide -->
   <script src="{% static 'js/burger.js' %}"></script>
+  <!-- highlight.js via CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
   <script>
     lucide.createIcons();
+    hljs.highlightAll();
   </script>
   {% block extra_js %}{% endblock %}
 </body>

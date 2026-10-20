@@ -86,7 +86,7 @@
         <!-- Текстовое содержимое (Markdown или простой текст) -->
         <div class="lesson-content">
           {% if lesson.content_type == 'markdown' %}
-            <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-slate-900 prose-pre:text-slate-100 prose-pre:rounded-xl prose-img:rounded-xl">
+            <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-transparent prose-pre:p-0 prose-code:rounded-xl prose-img:rounded-xl">
               {{ lesson.get_rendered_markdown }}
             </article>
           {% else %}
