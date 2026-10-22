@@ -20,6 +20,20 @@ class CustomUserRegistrationForm(UserCreationForm):
         ),
     )
 
+    consent = forms.BooleanField(
+        required=True,
+        label='Я согласен на обработку персональных данных',
+        error_messages={
+            'required': 'Необходимо согласие на обработку персональных данных',
+        },
+        widget=forms.CheckboxInput(
+            attrs={
+                'id': 'consent',
+                'class': 'w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2 cursor-pointer',
+            }
+        ),
+    )
+
     class Meta:
         model = CustomUser
         fields = ('username', 'full_name')
@@ -49,10 +63,21 @@ class CustomUserRegistrationForm(UserCreationForm):
             }
         )
 
+    def clean_consent(self):
+        consent = self.cleaned_data.get('consent')
+        if not consent:
+            raise forms.ValidationError('Необходимо согласие на обработку персональных данных')
+        return consent
+
     def save(self, commit=True):
+        from django.utils import timezone
+
         user = super().save(commit=False)
         user.role = CustomUser.ROLE_TEACHER
         user.is_approved = False  # Требуется подтверждение администратора
+        user.consent_personal_data = True
+        user.consent_date = timezone.now()
+        user.consent_version = '1.0'
         if commit:
             user.save()
         return user

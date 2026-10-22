@@ -5,8 +5,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.core import views as core_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('privacy/', core_views.PrivacyView.as_view(), name='privacy'),
+    path('terms/', core_views.TermsView.as_view(), name='terms'),
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('materials/', include('apps.catalog.urls', namespace='catalog')),
     path('editor/', include('apps.catalog.urls_editor', namespace='editor')),

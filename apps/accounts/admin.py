@@ -25,7 +25,7 @@ class CustomUserAdmin(UserAdmin):
         (
             'Роль и статус в KvantLearn',
             {
-                'fields': ('role', 'is_approved', 'full_name'),
+                'fields': ('role', 'is_approved', 'full_name', 'consent_personal_data', 'consent_date', 'consent_version'),
             },
         ),
     )
@@ -33,7 +33,7 @@ class CustomUserAdmin(UserAdmin):
         (
             'Роль и статус в KvantLearn',
             {
-                'fields': ('role', 'is_approved', 'full_name'),
+                'fields': ('role', 'is_approved', 'full_name', 'consent_personal_data', 'consent_date', 'consent_version'),
             },
         ),
     )

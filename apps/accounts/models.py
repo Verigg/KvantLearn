@@ -32,6 +32,22 @@ class CustomUser(AbstractUser):
         'Дата регистрации',
         auto_now_add=True,
     )
+    consent_personal_data = models.BooleanField(
+        'Согласие на обработку ПДн',
+        default=False,
+        help_text='Факт дачи согласия на обработку персональных данных (152-ФЗ).',
+    )
+    consent_date = models.DateTimeField(
+        'Дата и время дачи согласия',
+        null=True,
+        blank=True,
+    )
+    consent_version = models.CharField(
+        'Версия документов согласия',
+        max_length=20,
+        blank=True,
+        help_text='Версия политики и соглашения, с которой согласился пользователь (например, "1.0").',
+    )
 
     class Meta:
         verbose_name = 'Пользователь'

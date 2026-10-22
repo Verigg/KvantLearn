@@ -72,8 +72,36 @@
         {% endif %}
       </div>
 
+      <!-- Согласие на обработку персональных данных (152-ФЗ) -->
+      <div class="pt-3 border-t border-slate-100">
+        <div class="flex items-start space-x-3">
+          <div class="flex items-center h-5 mt-0.5">
+            <input type="checkbox"
+                   id="consent"
+                   name="consent"
+                   required
+                   class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2 cursor-pointer"
+                   {% if form.consent.value %}checked{% endif %}>
+          </div>
+          <div class="text-xs text-slate-600 leading-relaxed">
+            <label for="consent" class="cursor-pointer select-none">
+              Я согласен на обработку персональных данных в соответствии с
+              <a href="{% url 'privacy' %}" target="_blank" class="text-indigo-600 font-medium hover:text-indigo-800 underline">Политикой конфиденциальности</a>
+              и
+              <a href="{% url 'terms' %}" target="_blank" class="text-indigo-600 font-medium hover:text-indigo-800 underline">Пользовательским соглашением</a>.
+            </label>
+            {% if form.consent.errors %}
+              <p class="text-xs text-rose-600 mt-1 font-medium">{{ form.consent.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
       <div class="pt-2">
-        <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-sm transition flex items-center justify-center space-x-2">
+        <button type="submit"
+                id="register-btn"
+                disabled
+                class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600 text-white font-medium rounded-xl shadow-sm transition flex items-center justify-center space-x-2">
           <i data-lucide="check" class="w-4 h-4"></i>
           <span>Зарегистрироваться</span>
         </button>
@@ -88,4 +116,19 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('consent');
+    const btn = document.getElementById('register-btn');
+    if (checkbox && btn) {
+      btn.disabled = !checkbox.checked;
+      checkbox.addEventListener('change', function() {
+        btn.disabled = !checkbox.checked;
+      });
+    }
+  });
+</script>
 {% endblock %}

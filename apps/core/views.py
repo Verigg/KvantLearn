@@ -40,6 +40,18 @@ class HomeView(TemplateView):
         return context
 
 
+class PrivacyView(TemplateView):
+    """Страница политики конфиденциальности (152-ФЗ)."""
+
+    template_name = 'core/privacy.html'
+
+
+class TermsView(TemplateView):
+    """Страница пользовательского соглашения."""
+
+    template_name = 'core/terms.html'
+
+
 class SiteSettingsEditView(AdminRequiredMixin, UpdateView):
     """Страница редактирования глобальных настроек сайта (/settings/)."""
 
