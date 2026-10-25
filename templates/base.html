@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ site_settings.site_name|default:"KvantLearn" }}{% endblock %} — Учебные материалы Кванториума</title>
   <meta name="description" content="{% block meta_description %}{{ site_settings.site_description|default:'Каталог учебных материалов по IT и технологиям для учеников ДТ Кванториум' }}{% endblock %}">
-  
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}">
   <!-- Tailwind CSS via CDN with Typography plugin -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <script>
@@ -39,11 +39,25 @@
         
         <!-- Логотип и основное меню -->
         <div class="flex items-center space-x-8">
-          <a href="{% url 'core:home' %}" class="flex items-center space-x-2.5 font-bold text-xl text-slate-900 group">
-            <span class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm group-hover:bg-indigo-700 transition">
-              <i data-lucide="book-open" class="w-5 h-5"></i>
+          <a href="{% url 'core:home' %}" class="group flex items-center space-x-2.5 font-bold text-xl text-slate-900">
+            <span class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm transition group-hover:bg-indigo-600">
+              <span
+                class="w-10 h-10 bg-indigo-600 transition group-hover:bg-white"
+                style="
+                  -webkit-mask-image: url('{% static 'logo_monochrome.png' %}');
+                  mask-image: url('{% static 'logo_monochrome.png' %}');
+                  -webkit-mask-size: contain;
+                  mask-size: contain;
+                  -webkit-mask-repeat: no-repeat;
+                  mask-repeat: no-repeat;
+                  -webkit-mask-position: center;
+                  mask-position: center;
+                ">
+              </span>
             </span>
-            <span class="tracking-tight">{{ site_settings.site_name|default:"KvantLearn" }}</span>
+            <span>
+              <span class="text-indigo-600">Kvant</span>Learn
+            </span>
           </a>
 
           <nav class="hidden md:flex items-center space-x-1">
@@ -180,8 +194,18 @@
       <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div>
           <div class="flex items-center justify-center md:justify-start space-x-2 font-bold text-slate-900">
-            <span class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span
+              class="w-7 h-7 bg-indigo-600 transition group-hover:bg-white"
+              style="
+                -webkit-mask-image: url('{% static 'logo_monochrome.png' %}');
+                mask-image: url('{% static 'logo_monochrome.png' %}');
+                -webkit-mask-size: contain;
+                mask-size: contain;
+                -webkit-mask-repeat: no-repeat;
+                mask-repeat: no-repeat;
+                -webkit-mask-position: center;
+                mask-position: center;
+              ">
             </span>
             <span>{{ site_settings.site_name|default:"KvantLearn" }}</span>
           </div>
