@@ -63,21 +63,16 @@
             <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=prev_lesson.pk %}"
                class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-semibold transition shadow-sm">
               <i data-lucide="arrow-left" class="w-4 h-4"></i>
-              <span class="truncate max-w-[200px]">Назад: {{ prev_lesson.title }}</span>
+              <span class="truncate max-w-[200px]">Прошлый урок</span>
             </a>
           {% else %}
             <div></div>
           {% endif %}
 
-          <a href="{% url 'catalog:material_detail' slug=material.slug %}"
-             class="text-xs text-slate-500 hover:text-slate-800 font-medium">
-            Оглавление курса
-          </a>
-
           {% if next_lesson %}
             <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=next_lesson.pk %}"
                class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition shadow-sm">
-              <span class="truncate max-w-[200px]">Далее: {{ next_lesson.title }}</span>
+              <span class="truncate max-w-[200px]">Следующий урок</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
           {% else %}

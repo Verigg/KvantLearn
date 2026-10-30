@@ -189,13 +189,13 @@
   </main>
 
   <!-- Подвал сайта -->
-  <footer class="bg-white border-t border-slate-200 mt-16 py-8">
+  <footer class="bg-white border-t border-slate-200 py-4">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div>
           <div class="flex items-center justify-center md:justify-start space-x-2 font-bold text-slate-900">
             <span
-              class="w-7 h-7 bg-indigo-600 transition group-hover:bg-white"
+              class="w-8 h-8 bg-indigo-600 transition group-hover:bg-white"
               style="
                 -webkit-mask-image: url('{% static 'logo_monochrome.png' %}');
                 mask-image: url('{% static 'logo_monochrome.png' %}');
@@ -207,7 +207,9 @@
                 mask-position: center;
               ">
             </span>
-            <span>{{ site_settings.site_name|default:"KvantLearn" }}</span>
+            <span>
+              <span class="text-indigo-600">Kvant</span>Learn
+            </span>
           </div>
           <p class="text-xs text-slate-500 mt-1 max-w-full">
             {{ site_settings.footer_text|default:"ДТ «Кванториум» — современная экосистема детского научно-технического творчества." }}

@@ -156,10 +156,10 @@ DIRECTION_CHOICES = [
 TINYMCE_DEFAULT_CONFIG = {
     "language": "ru",
     "language_url": "/static/tinymce/langs/ru.js",
-    "height": 600,
+    "height": 900,
     "menubar": False,
-    "plugins": "advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount",
-    "toolbar": "undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code | removeformat",
+    "plugins": "advlist autolink lists link image charmap preview anchor searchreplace visualblocks code codesample fullscreen insertdatetime media table help wordcount",
+    "toolbar": "undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | codesample | removeformat | fullscreen",
     "images_upload_url": "/editor/upload-image/",
     "automatic_uploads": True,
     "file_picker_types": "image",
