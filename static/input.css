@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Указываем Tailwind, где искать классы в Django-шаблонах и Python-файлах */
+@source "../templates";
+@source "../apps/templates";
+@source "../apps/**/*.py";

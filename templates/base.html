@@ -7,8 +7,7 @@
   <title>{% block title %}{{ site_settings.site_name|default:"KvantLearn" }}{% endblock %} — Учебные материалы Кванториума</title>
   <meta name="description" content="{% block meta_description %}{{ site_settings.site_description|default:'Каталог учебных материалов по IT и технологиям для учеников ДТ Кванториум' }}{% endblock %}">
   <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}">
-  <!-- Tailwind CSS via CDN with Typography plugin -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <link rel="stylesheet" href="{% static 'dist/output.css' %}">
   <script>
     tailwind.config = {
       theme: {
