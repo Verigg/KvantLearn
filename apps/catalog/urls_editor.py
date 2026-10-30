@@ -24,4 +24,7 @@ urlpatterns = [
     path('lessons/<int:pk>/delete/', views.EditorLessonDeleteView.as_view(), name='lesson_delete'),
     path('lessons/<int:pk>/move-up/', views.EditorLessonMoveUpView.as_view(), name='lesson_move_up'),
     path('lessons/<int:pk>/move-down/', views.EditorLessonMoveDownView.as_view(), name='lesson_move_down'),
+
+    # Загрузка изображений из TinyMCE
+    path('upload-image/', views.editor_upload_image, name='upload_image'),
 ]

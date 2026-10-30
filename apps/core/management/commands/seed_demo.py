@@ -94,85 +94,115 @@ class Command(BaseCommand):
             defaults={'order': 1},
         )
 
-        # Урок 1 в Модуле 1
-        lesson1_content = """# Первые шаги в Python
+        # Урок 1 в Модуле 1 (Rich text HTML)
+        lesson1_content = """<h2>Первые шаги в Python</h2>
+<p>Добро пожаловать в вводный урок по изучению Python! Python — один из самых популярных, выразительных и дружелюбных языков программирования в мире.</p>
 
-Добро пожаловать в вводный урок по изучению Python! Python — один из самых популярных, выразительных и дружелюбных языков программирования в мире.
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+  <iframe src="https://www.youtube.com/embed/kqtD5dpn9C8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
-## Почему именно Python?
+<h3>Почему именно Python?</h3>
+<ul>
+  <li><strong>Простой и лаконичный синтаксис:</strong> код на Python читается практически как обычный английский текст.</li>
+  <li><strong>Огромное сообщество:</strong> тысячи готовых библиотек для машинного обучения, веб-разработки, робототехники и автоматизации.</li>
+  <li><strong>Кроссплатформенность:</strong> ваш код будет одинаково работать на Windows, macOS и Linux.</li>
+</ul>
 
-- **Простой и лаконичный синтаксис**: код на Python читается практически как обычный английский текст.
-- **Огромное сообщество**: миллионы готовых библиотек для машинного обучения, веб-разработки, робототехники и автоматизации.
-- **Кроссплатформенность**: ваш код будет одинаково работать на Windows, macOS и Linux.
-
-## Первая программа: Hello, World!
-
-Традиционно знакомство с любым языком начинается с вывода приветствия:
-
-```python
-# Наша первая строка кода
+<h3>Первая программа: Hello, World!</h3>
+<p>Традиционно знакомство с любым языком начинается с вывода приветствия:</p>
+<pre><code class="language-python"># Наша первая строка кода
 print("Привет, Кванториум!")
-```
+</code></pre>
 
-### Как запустить программу?
-1. Откройте терминал или командную строку.
-2. Введите команду:
-   ```bash
-   python main.py
-   ```
-3. Вы увидите приветственное сообщение на экране!
+<h3>Как запустить программу?</h3>
+<ol>
+  <li>Откройте терминал или командную строку в вашей среде разработки.</li>
+  <li>Введите команду: <code>python main.py</code></li>
+  <li>Вы увидите приветственное сообщение на экране!</li>
+</ol>
 
-> **Совет наставника:** Не бойтесь делать ошибки! Каждая ошибка в терминале — это подсказка интерпретатора о том, что именно нужно исправить.
+<blockquote>
+  <p><strong>Совет наставника:</strong> Не бойтесь делать ошибки! Каждая ошибка в терминале — это подсказка интерпретатора о том, что именно нужно исправить в логике программы.</p>
+</blockquote>
 """
-        Lesson.objects.get_or_create(
+        lesson1, l1_created = Lesson.objects.get_or_create(
             module=mod1,
             title='Урок 1. Установка и запуск первой программы',
             defaults={
                 'order': 1,
-                'content_type': Lesson.TYPE_MARKDOWN,
                 'content': lesson1_content,
-                'video_url': 'https://www.youtube.com/watch?v=kqtD5dpn9C8',
             },
         )
+        if not l1_created:
+            lesson1.content = lesson1_content
+            lesson1.save()
 
-        # Урок 2 в Модуле 1
-        lesson2_content = """# Переменные и основные типы данных
+        # Урок 2 в Модуле 1 (Rich text HTML)
+        lesson2_content = """<h2>Переменные и основные типы данных</h2>
+<p>В программировании переменная — это поименованная ячейка памяти компьютера, в которой сохраняется значение для дальнейшей работы.</p>
 
-В программировании переменная — это поименованная ячейка памяти компьютера, в которой сохраняется значение для дальнейшей работы.
+<h3>Основные базовые типы данных в Python</h3>
+<table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+  <thead>
+    <tr style="background-color: #f1f5f9; text-align: left;">
+      <th style="padding: 10px 14px; border: 1px solid #e2e8f0;">Тип данных</th>
+      <th style="padding: 10px 14px; border: 1px solid #e2e8f0;">Обозначение</th>
+      <th style="padding: 10px 14px; border: 1px solid #e2e8f0;">Пример значения</th>
+      <th style="padding: 10px 14px; border: 1px solid #e2e8f0;">Пояснение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><strong>Целое число</strong></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><code>int</code></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">42, -10, 0</td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">Для подсчета количества предметов, возраста</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><strong>Вещественное число</strong></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><code>float</code></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">3.14, -0.5</td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">Дробные величины, координаты, измерения датчиков</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><strong>Строка</strong></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><code>str</code></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">"Кванториум"</td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">Текстовая информация</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><strong>Булев тип</strong></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;"><code>bool</code></td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">True, False</td>
+      <td style="padding: 10px 14px; border: 1px solid #e2e8f0;">Логические флаги «Да / Нет»</td>
+    </tr>
+  </tbody>
+</table>
 
-## Основные базовые типы данных в Python
-
-| Тип данных | Обозначение | Пример значения | Пояснение |
-| :--- | :--- | :--- | :--- |
-| **Целое число** | `int` | `42`, `-10`, `0` | Для подсчета количества предметов, возраста |
-| **Вещественное число** | `float` | `3.14`, `-0.5` | Дробные величины, координаты, измерения датчиков |
-| **Строка** | `str` | `"Кванториум"` | Текстовая информация |
-| **Булев тип** | `bool` | `True`, `False` | Логические флаги «Да / Нет» |
-
-## Пример создания переменных в коде
-
-```python
-kvantum_name = "IT-Квантум"
+<h3>Пример создания переменных в коде</h3>
+<pre><code class="language-python">kvantum_name = "IT-Квантум"
 students_count = 14
 lesson_duration_hours = 1.5
 is_active = True
 
 print(f"В квантуме {kvantum_name} обучаются {students_count} учеников.")
-```
+</code></pre>
 
-## Практическое задание
-
-Попробуйте создать переменные для своего имени, возраста и любимого направления технологий, а затем вывести их с помощью форматированной строки `f-string`.
+<h3>Практическое задание</h3>
+<p>Попробуйте создать переменные для своего имени, возраста и любимого направления технологий, а затем вывести их с помощью форматированной строки <code>f-string</code>.</p>
 """
-        Lesson.objects.get_or_create(
+        lesson2, l2_created = Lesson.objects.get_or_create(
             module=mod1,
             title='Урок 2. Переменные и типы данных',
             defaults={
                 'order': 2,
-                'content_type': Lesson.TYPE_MARKDOWN,
                 'content': lesson2_content,
             },
         )
+        if not l2_created:
+            lesson2.content = lesson2_content
+            lesson2.save()
 
         # 4. Материал 2: Робототехника
         mat2, created = Material.objects.get_or_create(
@@ -195,20 +225,24 @@ print(f"В квантуме {kvantum_name} обучаются {students_count} �
             defaults={'order': 1},
         )
 
-        # Урок 1 в Модуле 2
-        lesson3_content = """# Архитектура Arduino Uno и макетная плата
+        # Урок 1 в Модуле 2 (Rich text HTML)
+        lesson3_content = """<h2>Архитектура Arduino Uno и макетная плата</h2>
+<p>Платформа Arduino — это удобный инструмент для быстрого прототипирования электронных систем и робототехники.</p>
 
-Платформа Arduino — это удобный инструмент для быстрого прототипирования электронных систем.
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 1.5rem 0; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+  <iframe src="https://www.youtube.com/embed/09zf38F5iZ0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
-## Что находится на плате Arduino Uno?
+<h3>Что находится на плате Arduino Uno?</h3>
+<ul>
+  <li><strong>Микроконтроллер ATmega328P:</strong> сердце платы, выполняющее команды прошивки.</li>
+  <li><strong>14 цифровых пинов (Digital I/O):</strong> пины с 0 по 13 для приема и передачи логических сигналов (HIGH/LOW).</li>
+  <li><strong>6 аналоговых входов (A0 - A5):</strong> позволяют измерять напряжение от 0 до 5 вольт (например, с фоторезистора или терморезистора).</li>
+  <li><strong>Стабилизатор питания и разъем USB:</strong> для подачи напряжения и загрузки скетчей из Arduino IDE.</li>
+</ul>
 
-- **Микроконтроллер ATmega328P** — сердце платы, выполняющее команды прошивки.
-- **14 цифровых пинов (Digital I/O)** — пины с 0 по 13 для приема и передачи логических сигналов (HIGH/LOW).
-- **6 аналоговых входов (A0 - A5)** — позволяют измерять напряжение от 0 до 5 вольт (например, с фоторезистора или терморезистора).
-- **Стабилизатор питания и разъем USB** — для подачи напряжения и загрузки скетчей из Arduino IDE.
-
-```cpp
-void setup() {
+<h3>Скетч «Мигающий светодиод»</h3>
+<pre><code class="language-cpp">void setup() {
   // Настройка цифрового пина 13 на режим вывода
   pinMode(13, OUTPUT);
 }
@@ -219,32 +253,32 @@ void loop() {
   digitalWrite(13, LOW);  // Выключить светодиод
   delay(1000);            // Ждать 1 секунду
 }
-```
+</code></pre>
 
-Всегда проверяйте правильность полярности электронных компонентов перед подачей питания на плату!
+<blockquote>
+  <p><strong>Важно:</strong> Всегда проверяйте правильность полярности электронных компонентов (анод/катод светодиода) перед подачей питания на плату!</p>
+</blockquote>
 """
-        Lesson.objects.get_or_create(
+        lesson3, l3_created = Lesson.objects.get_or_create(
             module=mod2,
             title='Урок 1. Архитектура контроллера и скетч «Мигающий светодиод»',
             defaults={
                 'order': 1,
-                'content_type': Lesson.TYPE_MARKDOWN,
                 'content': lesson3_content,
-                'video_url': 'https://www.youtube.com/watch?v=09zf38F5iZ0',
             },
         )
+        if not l3_created:
+            lesson3.content = lesson3_content
+            lesson3.save()
 
-        # Урок 2 в Модуле 2
-        lesson4_content = """# Подключение кнопки и обработка дребезга контактов
+        # Урок 2 в Модуле 2 (Rich text HTML)
+        lesson4_content = """<h2>Подключение кнопки и обработка дребезга контактов</h2>
+<p>Кнопка — это базовый датчик дискретного ввода. Однако механические контакты кнопки не замыкаются мгновенно, что может вызывать ложные срабатывания.</p>
 
-Кнопка — это базовый датчик дискретного ввода. Однако механические контакты кнопки не замыкаются мгновенно.
+<h3>Схема с подтягивающим резистором (Pull-up)</h3>
+<p>Чтобы избежать случайных наводок (плавающего состояния пина), вход должен быть подтянут к питанию 5V или к земле (GND). В микроконтроллерах ATmega328P уже есть встроенные программные подтягивающие резисторы:</p>
 
-## Схема с подтягивающим резистором (Pull-up)
-
-Чтобы избежать случайных наводок (плавающего состояния пина), вход должен быть подтянут к питанию 5V или к земле (GND). В микроконтроллерах ATmega328P уже есть встроенные подтягивающие резисторы:
-
-```cpp
-const int BUTTON_PIN = 2;
+<pre><code class="language-cpp">const int BUTTON_PIN = 2;
 const int LED_PIN = 13;
 
 void setup() {
@@ -260,18 +294,20 @@ void loop() {
     digitalWrite(LED_PIN, LOW);
   }
 }
-```
+</code></pre>
 
-Обратите внимание: при использовании `INPUT_PULLUP` ненажатая кнопка возвращает `HIGH`, а при нажатии на кнопку — замкнута на землю и возвращает `LOW`.
+<p>Обратите внимание: при использовании <code>INPUT_PULLUP</code> ненажатая кнопка возвращает <code>HIGH</code>, а при нажатии на кнопку — замкнута на землю и возвращает <code>LOW</code>.</p>
 """
-        Lesson.objects.get_or_create(
+        lesson4, l4_created = Lesson.objects.get_or_create(
             module=mod2,
             title='Урок 2. Подключение кнопки и обработка дискретных сигналов',
             defaults={
                 'order': 2,
-                'content_type': Lesson.TYPE_MARKDOWN,
                 'content': lesson4_content,
             },
         )
+        if not l4_created:
+            lesson4.content = lesson4_content
+            lesson4.save()
 
-        self.stdout.write(self.style.SUCCESS('✓ Демо-данные успешно созданы!'))
+        self.stdout.write(self.style.SUCCESS('✓ Демо-данные успешно созданы в формате Rich Text!'))

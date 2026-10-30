@@ -14,6 +14,7 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('materials/', include('apps.catalog.urls', namespace='catalog')),
     path('editor/', include('apps.catalog.urls_editor', namespace='editor')),
+    path('tinymce/', include('tinymce.urls')),
     path('', include('apps.core.urls', namespace='core')),
 ]
 

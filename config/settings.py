@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party apps
+    'tinymce',
     # Local apps
     'apps.accounts.apps.AccountsConfig',
     'apps.catalog.apps.CatalogConfig',
@@ -149,3 +151,17 @@ DIRECTION_CHOICES = [
     ('design', 'Промышленный дизайн'),
     ('other', 'Другое'),
 ]
+
+# TinyMCE Configuration
+TINYMCE_DEFAULT_CONFIG = {
+    "language": "ru",
+    "language_url": "/static/tinymce/langs/ru.js",
+    "height": 600,
+    "menubar": False,
+    "plugins": "advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount",
+    "toolbar": "undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code | removeformat",
+    "images_upload_url": "/editor/upload-image/",
+    "automatic_uploads": True,
+    "file_picker_types": "image",
+    "images_reuse_filename": False,
+}

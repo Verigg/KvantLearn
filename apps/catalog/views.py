@@ -1,12 +1,18 @@
+import os
+from pathlib import Path
+from uuid import uuid4
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Max, Q
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -162,7 +168,6 @@ class LessonDetailView(DetailView):
         context['modules'] = material.modules.prefetch_related('lessons').order_by('order', 'id')
         context['prev_lesson'] = prev_lesson
         context['next_lesson'] = next_lesson
-        context['video_info'] = lesson.video_info
         return context
 
 
@@ -354,8 +359,7 @@ class EditorLessonCreateView(MaterialAuthorOrAdminMixin, View):
             module=module,
             title=title,
             order=max_order + 1,
-            content_type=Lesson.TYPE_MARKDOWN,
-            content='# Новый урок\n\nЗдесь начинается текст урока.',
+            content='<h2>Новый урок</h2><p>Здесь начинается текст урока.</p>',
         )
         messages.success(request, f'Урок «{lesson.title}» создан. Теперь вы можете заполнить его содержимое.')
         return redirect('editor:lesson_edit', pk=lesson.pk)
@@ -443,3 +447,52 @@ class EditorLessonMoveDownView(MaterialAuthorOrAdminMixin, View):
                 next_lesson.save(update_fields=['order'])
 
         return redirect('editor:material_edit', slug=lesson.module.material.slug)
+
+
+# =====================================================================
+# Загрузка изображений из TinyMCE редактора
+# =====================================================================
+
+@csrf_exempt
+def editor_upload_image(request):
+    """Загрузка изображения педагогом через TinyMCE в директорию media/teachers/<user_id>/."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Метод запроса должен быть POST.'}, status=405)
+
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Требуется авторизация.'}, status=401)
+
+    user_role = getattr(request.user, 'role', '')
+    is_admin = getattr(request.user, 'is_administrator', False) or getattr(request.user, 'is_superuser', False)
+    is_approved = getattr(request.user, 'is_approved', False)
+
+    if (user_role not in ['teacher', 'admin'] and not is_admin) or (user_role == 'teacher' and not is_approved and not is_admin):
+        return JsonResponse({'error': 'Доступно только подтвержденным педагогам и администраторам.'}, status=403)
+
+    file_obj = request.FILES.get('file')
+    if not file_obj:
+        return JsonResponse({'error': 'Файл изображения не передан.'}, status=400)
+
+    # Валидация расширения файла
+    ext = Path(file_obj.name).suffix.lower()
+    allowed_exts = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp'}
+    if ext not in allowed_exts:
+        return JsonResponse({'error': f'Недопустимый формат файла {ext}.'}, status=400)
+
+    try:
+        user_folder = Path(settings.MEDIA_ROOT) / f"teachers/{request.user.id}"
+        user_folder.mkdir(parents=True, exist_ok=True)
+
+        filename = f"{uuid4().hex}{ext}"
+        destination_path = user_folder / filename
+
+        with open(destination_path, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+
+        media_url = settings.MEDIA_URL.rstrip('/')
+        location = f"{media_url}/teachers/{request.user.id}/{filename}"
+        return JsonResponse({'location': location})
+    except Exception as exc:
+        return JsonResponse({'error': f'Ошибка сохранения файла: {str(exc)}'}, status=400)
+

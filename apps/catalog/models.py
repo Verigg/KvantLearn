@@ -1,10 +1,6 @@
-import re
-from urllib.parse import parse_qs, urlparse
-
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from django.utils.html import mark_safe
 from django.utils.text import slugify
 
 
@@ -111,13 +107,6 @@ class Module(models.Model):
 class Lesson(models.Model):
     """Урок внутри модуля учебного материала."""
 
-    TYPE_TEXT = 'text'
-    TYPE_MARKDOWN = 'markdown'
-    CONTENT_TYPE_CHOICES = [
-        (TYPE_TEXT, 'Текст'),
-        (TYPE_MARKDOWN, 'Markdown'),
-    ]
-
     module = models.ForeignKey(
         Module,
         on_delete=models.CASCADE,
@@ -126,18 +115,7 @@ class Lesson(models.Model):
     )
     title = models.CharField('Название урока', max_length=255)
     order = models.PositiveIntegerField('Порядковый номер', default=1)
-    content_type = models.CharField(
-        'Тип контента',
-        max_length=20,
-        choices=CONTENT_TYPE_CHOICES,
-        default=TYPE_MARKDOWN,
-    )
-    content = models.TextField('Содержимое урока', blank=True)
-    video_url = models.URLField(
-        'Ссылка на видео',
-        blank=True,
-        help_text='Ссылка на YouTube (youtu.be или watch?v=...), VK видео или прямая ссылка на .mp4 файл',
-    )
+    content = models.TextField('Содержимое урока (HTML)', blank=True)
     image = models.ImageField(
         'Изображение к уроку',
         upload_to='lessons/images/',
@@ -158,64 +136,3 @@ class Lesson(models.Model):
             kwargs={'slug': self.module.material.slug, 'pk': self.pk},
         )
 
-    def get_rendered_markdown(self):
-        """Рендеринг markdown контента с поддержкой fenced_code и tables."""
-        if not self.content:
-            return ""
-        try:
-            import markdown
-            html = markdown.markdown(
-                self.content,
-                extensions=['fenced_code', 'tables', 'nl2br'],
-            )
-            return mark_safe(html)
-        except ImportError:
-            return self.content
-
-    @property
-    def video_info(self):
-        """Определяет тип видео и возвращает данные для безопасного встраивания."""
-        if not self.video_url:
-            return None
-
-        url = self.video_url.strip()
-
-        # YouTube URL
-        if 'youtube.com' in url or 'youtu.be' in url:
-            video_id = None
-            if 'youtu.be/' in url:
-                parsed = urlparse(url)
-                video_id = parsed.path.lstrip('/')
-            elif 'youtube.com/watch' in url:
-                parsed = urlparse(url)
-                query_params = parse_qs(parsed.query)
-                video_id = query_params.get('v', [None])[0]
-            elif 'youtube.com/embed/' in url:
-                parsed = urlparse(url)
-                video_id = parsed.path.split('/embed/')[1].split('/')[0]
-            elif 'youtube.com/shorts/' in url:
-                parsed = urlparse(url)
-                video_id = parsed.path.split('/shorts/')[1].split('/')[0]
-
-            if video_id:
-                # Очистить от возможных дополнительных параметров
-                video_id = re.sub(r'[^a-zA-Z0-9_-]', '', video_id)
-                return {
-                    'kind': 'youtube',
-                    'embed_url': f"https://www.youtube.com/embed/{video_id}",
-                }
-
-        # VK Video
-        if 'vk.com/video_ext.php' in url:
-            return {'kind': 'iframe', 'embed_url': url}
-
-        # Direct mp4 / webm video
-        if url.lower().endswith(('.mp4', '.webm', '.ogg')) or 'video/mp4' in url:
-            return {'kind': 'direct_video', 'src': url}
-
-        # Generic iframe embed fallback if user provided embed url
-        if 'embed' in url:
-            return {'kind': 'iframe', 'embed_url': url}
-
-        # Fallback to direct video link
-        return {'kind': 'direct_video', 'src': url}

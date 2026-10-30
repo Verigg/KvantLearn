@@ -57,9 +57,7 @@ class CatalogAndEditorTests(TestCase):
             module=self.module1,
             title='Урок 1',
             order=1,
-            content_type=Lesson.TYPE_MARKDOWN,
-            content='# Заголовок\n\n```python\nprint("тест")\n```',
-            video_url='https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            content='<h2>Заголовок</h2><p>Тестовый контент урока</p>',
         )
 
         self.draft_mat = Material.objects.create(
@@ -134,3 +132,27 @@ class CatalogAndEditorTests(TestCase):
         self.assertEqual(res.status_code, 200)
         res = self.client.get(reverse('core:users_list'))
         self.assertEqual(res.status_code, 200)
+
+    def test_editor_upload_image(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        test_file = SimpleUploadedFile("test.png", b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR", content_type="image/png")
+
+        # Anonymous cannot upload
+        res = self.client.post(reverse('editor:upload_image'), {'file': test_file})
+        self.assertEqual(res.status_code, 401)
+
+        # Pending teacher cannot upload
+        self.client.login(username='pending_teacher', password='password123')
+        test_file.seek(0)
+        res = self.client.post(reverse('editor:upload_image'), {'file': test_file})
+        self.assertEqual(res.status_code, 403)
+        self.client.logout()
+
+        # Approved teacher can upload and receives location
+        self.client.login(username='teacher1', password='password123')
+        test_file.seek(0)
+        res = self.client.post(reverse('editor:upload_image'), {'file': test_file})
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertIn('location', data)
+        self.assertIn(f'/teachers/{self.teacher1.id}/', data['location'])

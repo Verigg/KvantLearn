@@ -5,7 +5,7 @@ from .models import Lesson, Material, Module
 class LessonInline(admin.StackedInline):
     model = Lesson
     extra = 1
-    fields = ('title', 'order', 'content_type', 'video_url', 'image', 'content')
+    fields = ('title', 'order', 'content')
 
 
 class ModuleInline(admin.TabularInline):
@@ -33,6 +33,7 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('title', 'module', 'order', 'content_type')
-    list_filter = ('content_type', 'module__material')
+    list_display = ('title', 'module', 'order')
+    list_filter = ('module__material',)
     search_fields = ('title', 'content', 'module__title')
+

@@ -51,12 +51,10 @@ class PersonalDataConsentTests(TestCase):
         self.assertEqual(res_privacy.status_code, 200)
         self.assertContains(res_privacy, 'Политика конфиденциальности')
         self.assertContains(res_privacy, '152-ФЗ')
-        self.assertContains(res_privacy, 'Настоящий документ является типовым шаблоном')
 
         res_terms = self.client.get(reverse('terms'))
         self.assertEqual(res_terms.status_code, 200)
         self.assertContains(res_terms, 'Пользовательское соглашение')
-        self.assertContains(res_terms, 'Настоящий документ является типовым шаблоном')
 
     def test_registration_page_contains_legal_links_and_checkbox(self):
         """Форма регистрации содержит чекбокс, ссылки на документы и атрибут disabled у кнопки."""

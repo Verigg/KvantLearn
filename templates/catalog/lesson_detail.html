@@ -50,50 +50,11 @@
           </div>
         </div>
 
-        <!-- Видеоматериал (если указан) -->
-        {% if video_info %}
-          <div class="mb-8">
-            <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-sm">
-              {% if video_info.kind == 'youtube' %}
-                <iframe src="{{ video_info.embed_url }}"
-                        title="{{ lesson.title }}"
-                        class="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        referrerpolicy="strict-origin-when-cross-origin" 
-                        allowfullscreen></iframe>
-              {% elif video_info.kind == 'iframe' %}
-                <iframe src="{{ video_info.embed_url }}"
-                        title="{{ lesson.title }}"
-                        class="w-full h-full"
-                        allowfullscreen></iframe>
-              {% elif video_info.kind == 'direct_video' %}
-                <video controls class="w-full h-full" preload="metadata">
-                  <source src="{{ video_info.src }}" type="video/mp4">
-                  Ваш браузер не поддерживает встроенное видео.
-                </video>
-              {% endif %}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Иллюстрация к уроку (если загружена) -->
-        {% if lesson.image %}
-          <div class="mb-8">
-            <img src="{{ lesson.image.url }}" alt="{{ lesson.title }}" class="w-full rounded-2xl border border-slate-200 shadow-sm" loading="lazy">
-          </div>
-        {% endif %}
-
-        <!-- Текстовое содержимое (Markdown или простой текст) -->
+        <!-- Содержимое урока (TinyMCE WYSIWYG / Safe HTML) -->
         <div class="lesson-content">
-          {% if lesson.content_type == 'markdown' %}
-            <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-transparent prose-pre:p-0 prose-code:rounded-xl prose-img:rounded-xl">
-              {{ lesson.get_rendered_markdown }}
-            </article>
-          {% else %}
-            <div class="text-sm sm:text-base text-slate-700 leading-relaxed whitespace-pre-line">
-              {{ lesson.content|linebreaks }}
-            </div>
-          {% endif %}
+          <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-transparent prose-pre:p-0 prose-code:rounded-xl prose-img:rounded-2xl prose-img:shadow-sm">
+            {{ lesson.content|safe }}
+          </article>
         </div>
 
         <!-- Навигация: Предыдущий / Следующий урок -->
@@ -160,9 +121,6 @@
                       {{ forloop.counter }}
                     </span>
                     <span class="truncate flex-1">{{ lsn.title }}</span>
-                    {% if lsn.video_url %}
-                      <i data-lucide="video" class="w-3 h-3 text-slate-400 flex-shrink-0"></i>
-                    {% endif %}
                   </a>
                 {% endfor %}
               </div>

@@ -1,4 +1,5 @@
 from django import forms
+from tinymce.widgets import TinyMCE
 from .models import Lesson, Material, Module
 
 
@@ -67,11 +68,17 @@ class ModuleForm(forms.ModelForm):
 
 
 class LessonForm(forms.ModelForm):
-    """Форма редактирования урока."""
+    """Форма редактирования урока с TinyMCE редактором."""
+
+    content = forms.CharField(
+        widget=TinyMCE(attrs={'cols': 80, 'rows': 30}),
+        required=False,
+        label='Содержимое урока',
+    )
 
     class Meta:
         model = Lesson
-        fields = ['title', 'content_type', 'content', 'video_url', 'image']
+        fields = ['title', 'content']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -79,34 +86,9 @@ class LessonForm(forms.ModelForm):
                     'placeholder': 'Название урока (например, «Переменные и типы данных»)',
                 }
             ),
-            'content_type': forms.RadioSelect(
-                attrs={
-                    'class': 'text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-gray-300',
-                }
-            ),
-            'content': forms.Textarea(
-                attrs={
-                    'rows': 14,
-                    'class': 'w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono text-gray-900 placeholder-gray-400',
-                    'placeholder': 'Введите текст урока или Markdown-разметку...',
-                }
-            ),
-            'video_url': forms.URLInput(
-                attrs={
-                    'class': 'w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-900 placeholder-gray-400',
-                    'placeholder': 'https://www.youtube.com/watch?v=... или ссылка на mp4/VK',
-                }
-            ),
-            'image': forms.FileInput(
-                attrs={
-                    'class': 'w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100',
-                }
-            ),
         }
         labels = {
             'title': 'Заголовок урока',
-            'content_type': 'Формат текста',
             'content': 'Содержимое урока',
-            'video_url': 'Видеоматериал (необязательно)',
-            'image': 'Иллюстрация к уроку (необязательно)',
         }
+
