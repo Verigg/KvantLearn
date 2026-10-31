@@ -3,43 +3,122 @@
 {% block title %}{{ lesson.title }} — {{ material.title }}{% endblock %}
 
 {% block content %}
-<div class="max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  
-  <!-- Хлебные крошки -->
-  <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap">
-    <a href="{% url 'core:home' %}" class="hover:text-indigo-600 transition">Главная</a>
-    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
-    <a href="{% url 'catalog:material_list' %}" class="hover:text-indigo-600 transition">Каталог</a>
-    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
-    <a href="{% url 'catalog:material_detail' slug=material.slug %}" class="hover:text-indigo-600 transition truncate max-w-xs">{{ material.title }}</a>
-    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
-    <span class="text-slate-800 font-medium truncate max-w-xs">{{ lesson.title }}</span>
-  </nav>
+<div class="flex w-full bg-slate-50 relative">
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    
-    <!-- Основной контент урока (8 колонок на десктопе) -->
-    <div class="lg:col-span-8">
-      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
-        
-        <!-- Заголовок урока и мета-информация -->
+  <!-- Триггер -->
+  <div id="toc-trigger-area"
+       class="fixed left-0 top-[calc(4rem+1px)] bottom-0 w-6
+              bg-white/80 hover:bg-indigo-50
+              border-r border-slate-200 hover:border-indigo-200
+              transition-colors cursor-pointer group
+              flex items-center justify-center
+              shadow-sm hover:shadow-md">
+    <div class="flex flex-col items-center gap-2 text-slate-400 group-hover:text-indigo-600 transition-colors">
+      <i data-lucide="book-open" class="w-4 h-4"></i>
+      <span class="vertical-text text-[11px] font-semibold uppercase tracking-widest select-none">
+        Оглавление
+      </span>
+    </div>
+  </div>
+
+  <!--
+    Сайдбар.
+    По умолчанию — fixed (не занимает места), уехал влево.
+    При открытии (hover) — fixed, выезжает поверх контента.
+    При закреплении (pin) — sticky, занимает место в потоке.
+    Управляется JS через классы.
+  -->
+<aside id="toc-sidebar"
+       class="fixed left-0 top-[calc(4rem+1px)] h-[calc(100vh-4rem-1px)]
+              w-[12.5%] min-w-[250px] max-w-[320px]
+              -translate-x-full transition-transform duration-300 ease-in-out
+              bg-white border-r border-slate-200 shadow-xl
+              z-20 flex flex-col pointer-events-none">
+
+    <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wide">Оглавление</h2>
+      <button id="pin-btn"
+              class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-400 hover:text-indigo-600 transition-colors"
+              title="Закрепить панель">
+        <i data-lucide="pin" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+      {% for mod in modules %}
+        <div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">
+            {{ mod.title }}
+          </div>
+          <div class="space-y-1">
+            {% for lsn in mod.lessons.all %}
+              <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=lsn.pk %}"
+                 class="group flex items-start space-x-3 px-3 py-2.5 rounded-xl text-xs transition-all duration-200
+                 {% if lsn.pk == lesson.pk %}
+                   bg-indigo-50 text-indigo-700 font-semibold shadow-sm ring-1 ring-indigo-100
+                 {% else %}
+                   text-slate-600 hover:bg-slate-50 hover:text-slate-900
+                 {% endif %}">
+                <span class="mt-0.5 w-5 h-5 rounded-md flex items-center justify-center text-[10px] flex-shrink-0 font-mono
+                  {% if lsn.pk == lesson.pk %}bg-indigo-600 text-white{% else %}bg-slate-100 text-slate-500 group-hover:bg-white group-hover:shadow-sm{% endif %}">
+                  {{ forloop.counter }}
+                </span>
+                <span class="leading-tight line-clamp-2">{{ lsn.title }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="p-4 border-t border-slate-100 bg-slate-50/30">
+      <a href="{% url 'catalog:material_detail' slug=material.slug %}"
+         class="flex items-center justify-center space-x-2 text-xs text-slate-500 hover:text-indigo-600 transition">
+        <i data-lucide="arrow-left" class="w-3 h-3"></i>
+        <span>Вернуться к курсу</span>
+      </a>
+    </div>
+  </aside>
+
+  <!--
+    Основной контент.
+    Когда сайдбар fixed (закрыт или открыт hover) — main занимает всю ширину
+    и центрируется корректно.
+    Когда сайдбар закреплён — у main появляется margin-left, и центрирование
+    идёт в оставшейся области (это ожидаемо при закреплении).
+  -->
+  <main id="main-content"
+        class="flex-1 min-w-0 relative transition-[margin] duration-300">
+
+    <div class="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-6 overflow-x-auto whitespace-nowrap pb-2">
+        <a href="{% url 'core:home' %}" class="hover:text-indigo-600 transition">Главная</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+        <a href="{% url 'catalog:material_list' %}" class="hover:text-indigo-600 transition">Каталог</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+        <a href="{% url 'catalog:material_detail' slug=material.slug %}"
+           class="hover:text-indigo-600 transition truncate max-w-xs">{{ material.title }}</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+        <span class="text-slate-800 font-medium truncate max-w-xs">{{ lesson.title }}</span>
+      </nav>
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm mb-8">
+        <!-- ... остальной контент урока без изменений ... -->
         <div class="border-b border-slate-100 pb-6 mb-8">
           <div class="flex items-center space-x-2 text-xs text-indigo-600 font-semibold mb-2">
             <span>{{ lesson.module.title }}</span>
             <span>&bull;</span>
             <span>Урок {{ lesson.order }}</span>
           </div>
-
           <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
             {{ lesson.title }}
           </h1>
-
           <div class="mt-4 flex items-center justify-between text-xs text-slate-500">
             <span class="flex items-center space-x-1.5">
               <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
               <span>Автор: <strong>{{ material.author.display_name }}</strong></span>
             </span>
-
             {% if user.is_authenticated and user == material.author or user.is_administrator %}
               <a href="{% url 'editor:lesson_edit' pk=lesson.pk %}"
                  class="inline-flex items-center space-x-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium bg-indigo-50 px-2.5 py-1 rounded-lg">
@@ -50,14 +129,12 @@
           </div>
         </div>
 
-        <!-- Содержимое урока (TinyMCE WYSIWYG / Safe HTML) -->
         <div class="lesson-content">
           <article class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:underline prose-pre:bg-transparent prose-pre:p-0 prose-code:rounded-xl prose-img:rounded-2xl prose-img:shadow-sm">
             {{ lesson.content|safe }}
           </article>
         </div>
 
-        <!-- Навигация: Предыдущий / Следующий урок -->
         <div class="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
           {% if prev_lesson %}
             <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=prev_lesson.pk %}"
@@ -65,9 +142,7 @@
               <i data-lucide="arrow-left" class="w-4 h-4"></i>
               <span class="truncate max-w-[200px]">Прошлый урок</span>
             </a>
-          {% else %}
-            <div></div>
-          {% endif %}
+          {% else %}<div></div>{% endif %}
 
           {% if next_lesson %}
             <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=next_lesson.pk %}"
@@ -81,52 +156,154 @@
             </span>
           {% endif %}
         </div>
-
       </div>
+
     </div>
-
-    <!-- Боковая панель: Оглавление курса (4 колонки на десктопе) -->
-    <div class="lg:col-span-4">
-      <div class="sticky top-24 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-        
-        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
-          <div class="font-bold text-slate-900 text-base">Оглавление курса</div>
-          <a href="{% url 'catalog:material_detail' slug=material.slug %}" class="text-xs text-indigo-600 hover:underline">
-            Обзор
-          </a>
-        </div>
-
-        <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-          {% for mod in modules %}
-            <div>
-              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                {{ mod.title }}
-              </div>
-              <div class="space-y-1">
-                {% for lsn in mod.lessons.all %}
-                  <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=lsn.pk %}"
-                     class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs transition
-                     {% if lsn.pk == lesson.pk %}
-                       bg-indigo-50 text-indigo-700 font-bold border border-indigo-100
-                     {% else %}
-                       text-slate-600 hover:bg-slate-50 hover:text-slate-900
-                     {% endif %}">
-                    <span class="w-5 h-5 rounded-md flex items-center justify-center text-[10px] flex-shrink-0
-                      {% if lsn.pk == lesson.pk %}bg-indigo-600 text-white{% else %}bg-slate-100 text-slate-500{% endif %}">
-                      {{ forloop.counter }}
-                    </span>
-                    <span class="truncate flex-1">{{ lsn.title }}</span>
-                  </a>
-                {% endfor %}
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
+  </main>
 </div>
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const triggerArea = document.getElementById('toc-trigger-area');
+    const sidebar     = document.getElementById('toc-sidebar');
+    const mainContent = document.getElementById('main-content');
+    const pinBtn      = document.getElementById('pin-btn');
+    const scrollBox   = sidebar.querySelector('.custom-scrollbar');
+
+    // Ключи localStorage (привязаны к курсу, чтобы у разных курсов состояние было независимым)
+    const PIN_KEY    = 'toc-pinned:{{ material.slug }}';
+    const SCROLL_KEY = 'toc-scroll:{{ material.slug }}';
+
+    // Восстанавливаем закрепление
+    let isPinned = localStorage.getItem(PIN_KEY) === '1';
+
+    // Фиксированный сайдбар (overlay)
+    const CLASSES_FIXED      = ['fixed', 'left-0', '-translate-x-full', 'shadow-xl'];
+    const CLASSES_FIXED_OPEN = ['fixed', 'left-0', 'translate-x-0', 'shadow-xl'];
+    // Sticky сайдбар (закреплён)
+    const CLASSES_STICKY     = ['sticky', 'flex-shrink-0', 'translate-x-0', 'shadow-none'];
+
+    const setSidebarMode = (mode) => {
+        sidebar.classList.remove(
+            'fixed', 'sticky', 'flex-shrink-0',
+            'left-0', '-translate-x-full', 'translate-x-0',
+            'shadow-xl', 'shadow-none',
+            'pointer-events-none', 'pointer-events-auto'
+        );
+        triggerArea.classList.remove('z-10', 'z-30');
+
+        if (mode === 'fixed-closed') {
+            sidebar.classList.add(...CLASSES_FIXED, 'pointer-events-none');
+            triggerArea.classList.add('z-30');      // кнопка сверху, сайдбар не ловит мышь
+            mainContent.style.marginLeft = '0px';
+        } else if (mode === 'fixed-open') {
+            sidebar.classList.add(...CLASSES_FIXED_OPEN, 'pointer-events-auto');
+            triggerArea.classList.add('z-10');      // сайдбар сверху
+            mainContent.style.marginLeft = '0px';
+        } else if (mode === 'sticky') {
+            sidebar.classList.add(...CLASSES_STICKY, 'pointer-events-auto');
+            triggerArea.classList.add('z-10');      // закреплён — сайдбар сверху
+            mainContent.style.marginLeft = '0px';
+        }
+    };
+
+    const applyPinVisuals = (pinned) => {
+        const icon = pinBtn.querySelector('svg');
+        if (pinned) {
+            pinBtn.classList.add('bg-indigo-100', 'text-indigo-600');
+            pinBtn.classList.remove('text-slate-400');
+            icon?.classList.add('rotate-45');
+        } else {
+            pinBtn.classList.remove('bg-indigo-100', 'text-indigo-600');
+            pinBtn.classList.add('text-slate-400');
+            icon?.classList.remove('rotate-45');
+        }
+    };
+
+    const openSidebar = () => {
+        if (isPinned) return;
+        setSidebarMode('fixed-open');
+    };
+
+    const closeSidebar = () => {
+        if (isPinned) return;
+        setSidebarMode('fixed-closed');
+    };
+
+    triggerArea.addEventListener('mouseenter', openSidebar);
+    triggerArea.addEventListener('mouseleave', () => {
+        if (!isPinned && !sidebar.matches(':hover')) closeSidebar();
+    });
+    sidebar.addEventListener('mouseleave', () => {
+        setTimeout(() => {
+            if (!isPinned && !sidebar.matches(':hover') && !triggerArea.matches(':hover')) {
+                closeSidebar();
+            }
+        }, 100);
+    });
+
+    pinBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isPinned = !isPinned;
+
+        // Сохраняем состояние
+        localStorage.setItem(PIN_KEY, isPinned ? '1' : '0');
+
+        applyPinVisuals(isPinned);
+
+        if (isPinned) {
+            setSidebarMode('sticky');
+        } else {
+            if (!sidebar.matches(':hover') && !triggerArea.matches(':hover')) {
+                setSidebarMode('fixed-closed');
+            } else {
+                setSidebarMode('fixed-open');
+            }
+        }
+    });
+
+    // Восстанавливаем прокрутку оглавления (после применения режима)
+    const savedScroll = parseInt(localStorage.getItem(SCROLL_KEY) || '0', 10);
+    if (savedScroll && scrollBox) {
+        // requestAnimationFrame — чтобы контейнер уже имел размеры
+        requestAnimationFrame(() => {
+            scrollBox.scrollTop = savedScroll;
+        });
+    }
+
+    // Сохраняем прокрутку с дебаунсом
+    if (scrollBox) {
+        let scrollTimer;
+        scrollBox.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                localStorage.setItem(SCROLL_KEY, String(scrollBox.scrollTop));
+            }, 150);
+        });
+    }
+
+    // Стартовое состояние
+    applyPinVisuals(isPinned);
+    if (isPinned) {
+        setSidebarMode('sticky');
+    } else {
+        setSidebarMode('fixed-closed');
+    }
+});
+</script>
+
+<style>
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background-color: #94a3b8; }
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    letter-spacing: 0.15em;
+}
+</style>
 {% endblock %}

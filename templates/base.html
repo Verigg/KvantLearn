@@ -189,6 +189,7 @@
   </main>
 
   <!-- Подвал сайта -->
+  {% block footer %}
   <footer class="bg-white border-t border-slate-200 py-4">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
@@ -229,6 +230,7 @@
       </div>
     </div>
   </footer>
+  {% endblock %}
 
   <!-- Минимальный скрипт бургер-меню и инициализация иконок Lucide -->
   <script src="{% static 'js/burger.js' %}"></script>
