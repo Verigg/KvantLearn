@@ -200,20 +200,6 @@
                         {{ forloop.counter }}
                       </span>
                       <span class="font-medium text-slate-800 truncate">{{ lesson.title }}</span>
-                      
-                      <div class="flex items-center space-x-1.5 text-xs text-slate-400 flex-shrink-0">
-                        {% if lesson.content_type == 'markdown' %}
-                          <span class="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-slate-500 font-mono">MD</span>
-                        {% else %}
-                          <span class="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-slate-500">Текст</span>
-                        {% endif %}
-                        {% if lesson.video_url %}
-                          <i data-lucide="video" class="w-3.5 h-3.5 text-indigo-500" title="Видео"></i>
-                        {% endif %}
-                        {% if lesson.image %}
-                          <i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500" title="Картинка"></i>
-                        {% endif %}
-                      </div>
                     </div>
 
                     <!-- Кнопки управления уроком -->
@@ -234,10 +220,17 @@
                         </button>
                       </form>
 
+                      <a href="{% url 'catalog:lesson_detail' slug=material.slug pk=lesson.pk %}"
+                         target="_blank"
+                         class="inline-flex items-center px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+                        <i data-lucide="eye" class="w-4 h-4 mr-1"></i>
+                        <span>Посмотреть</span>
+                      </a>
+
                       <!-- Редактировать урок -->
                       <a href="{% url 'editor:lesson_edit' pk=lesson.pk %}"
                          class="inline-flex items-center px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg transition">
-                        <i data-lucide="edit" class="w-3 h-3 mr-1"></i>
+                        <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
                         <span>Редактировать</span>
                       </a>
 
@@ -245,7 +238,7 @@
                       <form method="post" action="{% url 'editor:lesson_delete' pk=lesson.pk %}" onsubmit="return confirm('Удалить урок «{{ lesson.title }}»?');" class="inline">
                         {% csrf_token %}
                         <button type="submit" class="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Удалить урок">
-                          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                       </form>
                     </div>
