@@ -33,16 +33,16 @@
 <body class="min-h-full flex flex-col text-slate-800 antialiased font-sans">
   
   <!-- Верхняя навигационная панель -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+  <header class="sticky top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         
         <!-- Логотип и основное меню -->
         <div class="flex items-center space-x-8">
           <a href="{% url 'core:home' %}" class="group flex items-center space-x-2.5 font-bold text-xl text-slate-900">
-            <span class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm transition group-hover:bg-indigo-600">
+            <span class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm transition group-hover:bg-gradient-to-br from-indigo-500 to-purple-600">
               <span
-                class="w-10 h-10 bg-indigo-600 transition group-hover:bg-white"
+                class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 transition group-hover:bg-none group-hover:bg-white"
                 style="
                   -webkit-mask-image: url('{% static 'logo_monochrome.png' %}');
                   mask-image: url('{% static 'logo_monochrome.png' %}');
@@ -56,7 +56,7 @@
               </span>
             </span>
             <span>
-              <span class="text-indigo-600">Kvant</span>Learn
+              <span class="bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent glow-text">Kvant</span>Learn
             </span>
           </a>
 
@@ -182,6 +182,7 @@
     </div>
   </header>
 
+  
   <!-- Флеш-сообщения -->
   <main class="flex-1">
     {% include "includes/messages.html" %}

@@ -1,317 +1,517 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Главная — {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
+{% block title %}Главная - {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="relative bg-gradient-to-b from-indigo-50/70 to-slate-50 border-b border-slate-200 py-16 sm:py-24 overflow-hidden">
-  <!-- Декоративные пятна -->
-  <div class="absolute inset-0 -z-0">
-    <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-300/30 rounded-full blur-3xl"></div>
-  </div>
+<!-- ================= HERO ================= -->
+<section class="relative hero-gradient grid-bg pt-16 pb-20 overflow-hidden border-b border-slate-200/60">
+    <div class="absolute top-20 right-10 w-72 h-72 bg-indigo-300/20 rounded-full blur-3xl float-slow"></div>
+    <div class="absolute bottom-10 left-10 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl float-medium"></div>
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-semibold mb-6">
-      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-      <span>Детский технопарк «Кванториум»</span>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="animate-fade-up">
+
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6">
+                    Технологии<br>
+                    <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent glow-text">будущего</span><br>
+                    сегодня
+                </h1>
+
+                <p class="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+                    {{ site_settings.hero_subtitle|default:"Онлайн-платформа KvantLearn - продолжение обучения в детском технопарке «Кванториум». Бесплатные курсы по программированию, 3D-моделированию и робототехнике, связанные со школьной программой." }}
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'catalog:material_list' %}" class="inline-flex items-center gap-2 px-7 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition glow">
+                        <i data-lucide="compass" class="w-5 h-5"></i>
+                        Перейти в каталог материалов
+                    </a>
+                </div>
+
+                <!-- Статистика -->
+                <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">100%</div>
+                        <div class="text-sm text-slate-500 mt-1">Бесплатно</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">3+</div>
+                        <div class="text-sm text-slate-500 mt-1">Направления</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-slate-900">∞</div>
+                        <div class="text-sm text-slate-500 mt-1">Возможностей</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Визуальный блок -->
+            <div class="relative animate-fade-up">
+                <div class="relative bg-white rounded-3xl p-8 border border-slate-200/60 glow">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        <div class="ml-4 text-xs font-mono text-slate-400">kvantlearn.ru</div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center">
+                                <i data-lucide="code-2" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-sm">Программирование</div>
+                                <div class="text-xs text-slate-500">Python · JavaScript · Scratch</div>
+                            </div>
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                            <div class="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center">
+                                <i data-lucide="box" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-sm">3D-моделирование</div>
+                                <div class="text-xs text-slate-500">Blender · Unity · Godot</div>
+                            </div>
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-100">
+                            <div class="w-10 h-10 rounded-lg bg-pink-500 flex items-center justify-center">
+                                <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-sm">Робототехника</div>
+                                <div class="text-xs text-slate-500">Arduino · LEGO · датчики</div>
+                            </div>
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-slate-100">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="font-medium">Ваш прогресс</span>
+                            <span class="font-mono text-indigo-600">73%</span>
+                        </div>
+                        <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full w-[73%] bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute -top-4 -right-4 bg-white rounded-2xl p-3 border border-slate-200 shadow-lg float-slow">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="award" class="w-5 h-5 text-yellow-500"></i>
+                        <span class="text-sm font-semibold">+100 XP</span>
+                    </div>
+                </div>
+
+                <div class="absolute -bottom-4 -left-4 bg-white rounded-2xl p-3 border border-slate-200 shadow-lg float-medium">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+                        <span class="text-sm font-semibold">7 дней подряд</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight sm:leading-none">
-      {{ site_settings.hero_title|default:"Дополнительное образование, которое работает вместе со школой" }}
-    </h1>
-
-    <p class="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-      {{ site_settings.hero_subtitle|default:"«Кванториум» — это современная среда, где дети применяют школьные знания на практике: изучают IT, инженерию и технологии, создают реальные проекты и готовятся к профессиям будущего." }}
-    </p>
-
-    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="{% url 'catalog:material_list' %}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center space-x-2">
-        <i data-lucide="compass" class="w-4 h-4"></i>
-        <span>Перейти в каталог материалов</span>
-      </a>
-      {% if not user.is_authenticated %}
-        <a href="{% url 'accounts:register' %}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm border border-slate-200 shadow-sm transition flex items-center justify-center space-x-2">
-          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
-          <span>Я педагог (регистрация)</span>
-        </a>
-      {% endif %}
-    </div>
-
-    <!-- Быстрые направления (Chips) -->
-    <div class="mt-12 flex flex-wrap items-center justify-center gap-2">
-      <span class="text-xs text-slate-500 font-medium mr-2">Популярные направления:</span>
-      {% for code, label in CATALOG_DIRECTIONS %}
-        <a href="{% url 'catalog:material_list' %}?direction={{ code }}"
-           class="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/50 transition shadow-sm">
-          {{ label }}
-        </a>
-      {% endfor %}
-    </div>
-  </div>
 </section>
 
-<!-- О Кванториуме -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-    <div>
-      <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-semibold mb-4">
-        <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
-        <span>О технопарке</span>
-      </span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-        «Кванториум» — место, где рождаются инженеры будущего
-      </h2>
-      <p class="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-        Детский технопарк «Кванториум» — это сеть современных детских технопарков, созданных в рамках национального проекта «Образование». Здесь ребята 5–18 лет получают дополнительное образование технического и естественнонаучного профиля.
-      </p>
-      <p class="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-        Мы не заменяем школу — мы усиливаем её. Дети приходят к нам после уроков, чтобы увидеть, как работают физика, математика, информатика и технология в реальных проектах: от программирования роботов и создания дронов до разработки VR-приложений и инженерного проектирования.
-      </p>
+<!-- ================= О ПРОЕКТЕ ================= -->
+<section id="about" class="py-10 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold mb-4">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                О проекте
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                KvantLearn - это<br>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">экосистема знаний</span>
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed">
+                Мы создали онлайн-платформу, которая продолжает и дополняет обучение в детском технопарке «Кванториум». Здесь каждый ученик может углубить свои знания, пройти новые курсы и развиваться в IT-направлениях - бесплатно и в удобное время.
+            </p>
+        </div>
 
-      <div class="mt-6 grid grid-cols-2 gap-4">
-        <div class="p-4 rounded-xl bg-indigo-50/60 border border-indigo-100">
-          <div class="text-2xl font-extrabold text-indigo-600">200+</div>
-          <div class="text-xs text-slate-600 mt-1">квантумов и направлений по всей стране</div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="card-hover bg-gradient-to-br from-indigo-50 to-white p-8 rounded-2xl border border-indigo-100">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center mb-5">
+                    <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Продолжение Кванториума</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Те же методики, те же преподаватели, но в онлайн-формате. Учитесь там, где удобно, и возвращайтесь к материалам в любое время.
+                </p>
+            </div>
+
+            <div class="card-hover bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl border border-purple-100">
+                <div class="w-12 h-12 rounded-xl bg-purple-500 flex items-center justify-center mb-5">
+                    <i data-lucide="infinity" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Полностью бесплатно</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Все курсы доступны без оплаты и скрытых платежей. Мы верим, что качественное IT-образование должно быть открытым для каждого.
+                </p>
+            </div>
+
+            <div class="card-hover bg-gradient-to-br from-pink-50 to-white p-8 rounded-2xl border border-pink-100">
+                <div class="w-12 h-12 rounded-xl bg-pink-500 flex items-center justify-center mb-5">
+                    <i data-lucide="users" class="w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Сообщество учеников</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Присоединяйтесь к сообществу единомышленников. Делитесь проектами, получайте обратную связь и развивайтесь вместе.
+                </p>
+            </div>
         </div>
-        <div class="p-4 rounded-xl bg-indigo-50/60 border border-indigo-100">
-          <div class="text-2xl font-extrabold text-indigo-600">5–18</div>
-          <div class="text-xs text-slate-600 mt-1">лет — возраст наших воспитанников</div>
-        </div>
-      </div>
     </div>
-
-    <div class="relative">
-      <div class="aspect-[4/3] rounded-2xl bg-gradient-to-br from-indigo-100 via-indigo-50 to-slate-50 border border-slate-200 shadow-sm p-6 flex flex-col justify-between">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
-              <i data-lucide="atom" class="w-4 h-4"></i>
-            </div>
-            <span class="text-xs font-semibold text-slate-700">KvantLearn</span>
-          </div>
-          <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Demo</span>
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center space-x-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-semibold text-slate-800 truncate">Робототехника</div>
-              <div class="text-[11px] text-slate-500 truncate">Arduino, датчики, механика</div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
-              <i data-lucide="code" class="w-4 h-4"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-semibold text-slate-800 truncate">Программирование</div>
-              <div class="text-[11px] text-slate-500 truncate">Python, алгоритмы, проекты</div>
-            </div>
-          </div>
-          <div class="flex items-center space-x-3 p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
-            <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
-              <i data-lucide="rocket" class="w-4 h-4"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-semibold text-slate-800 truncate">Промышленный дизайн</div>
-              <div class="text-[11px] text-slate-500 truncate">3D-моделирование, прототипы</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- Связь доп. образования со школой -->
-<section class="bg-white border-y border-slate-200 py-16">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-12">
-      <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-semibold mb-4">
-        <i data-lucide="link-2" class="w-3.5 h-3.5"></i>
-        <span>Школа + Кванториум</span>
-      </span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-        Как дополнительное образование дополняет школу
-      </h2>
-      <p class="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-        Школа даёт фундамент — теорию, базовые навыки и дисциплину. Кванториум превращает эти знания в живой опыт: ребёнок видит, зачем учится, и учится применять знания на практике.
-      </p>
+<!-- ================= СВЯЗЬ СО ШКОЛОЙ ================= -->
+<section id="connection" class="py-10 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-50"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm font-semibold mb-4">
+                <i data-lucide="link-2" class="w-4 h-4"></i>
+                Ключевая идея
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                Как связаны<br>
+                <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">школа, Кванториум и KvantLearn?</span>
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed">
+                Мы выстроили единую образовательную траекторию, где каждый элемент усиливает другой. Школьные знания становятся основой, Кванториум даёт практику, а KvantLearn позволяет развиваться дальше - уже самостоятельно.
+            </p>
+        </div>
+
+        <div class="relative">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Школа -->
+                <div class="relative">
+                    <div class="bg-white rounded-2xl p-8 border border-slate-200 card-hover h-full">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6">
+                            <i data-lucide="book-open" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <div class="text-xs font-mono text-blue-600 mb-2">01 · ОСНОВА</div>
+                        <h3 class="text-2xl font-bold mb-4">Школьное образование</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            Школа даёт фундамент: математику, физику, логику, язык. Это база, без которой невозможно глубокое понимание технологий.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="calculator" class="w-4 h-4 text-blue-500"></i>
+                                <span>Математика и алгебра</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="atom" class="w-4 h-4 text-blue-500"></i>
+                                <span>Физика и механика</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="brain" class="w-4 h-4 text-blue-500"></i>
+                                <span>Логическое мышление</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="languages" class="w-4 h-4 text-blue-500"></i>
+                                <span>Русский и английский</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кванториум -->
+                <div class="relative">
+                    <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-8 text-white card-hover h-full glow">
+                        <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mb-6">
+                            <i data-lucide="atom" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <div class="text-xs font-mono text-indigo-200 mb-2">02 · ПРАКТИКА</div>
+                        <h3 class="text-2xl font-bold mb-4">ДТ «Кванториум»</h3>
+                        <p class="text-indigo-100 text-sm leading-relaxed mb-6">
+                            Здесь школьные знания оживают. Мы превращаем теорию в реальные проекты: от кода до работающих роботов и 3D-моделей.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="wrench" class="w-4 h-4 text-indigo-200"></i>
+                                <span>Проектная деятельность</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="users" class="w-4 h-4 text-indigo-200"></i>
+                                <span>Командная работа</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="presentation" class="w-4 h-4 text-indigo-200"></i>
+                                <span>Защита проектов</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="trophy" class="w-4 h-4 text-indigo-200"></i>
+                                <span>Конкурсы и олимпиады</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KvantLearn -->
+                <div class="relative">
+                    <div class="bg-white rounded-2xl p-8 border border-slate-200 card-hover h-full">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6">
+                            <i data-lucide="globe" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <div class="text-xs font-mono text-pink-600 mb-2">03 · РАЗВИТИЕ</div>
+                        <h3 class="text-2xl font-bold mb-4">Онлайн-платформа KvantLearn</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            Продолжение обучения дома. Углублённые курсы, самостоятельные проекты и возможность развиваться в своём темпе.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="video" class="w-4 h-4 text-pink-500"></i>
+                                <span>Видеоуроки и материалы</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="code-2" class="w-4 h-4 text-pink-500"></i>
+                                <span>Практика в браузере</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-pink-500"></i>
+                                <span>Отслеживание прогресса</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <i data-lucide="clock" class="w-4 h-4 text-pink-500"></i>
+                                <span>Доступ 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Детальное объяснение -->
+        <div class="mt-16 bg-white rounded-3xl p-8 md:p-14 border border-slate-200 glow">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full text-md font-semibold mb-4">
+                        <i data-lucide="check" class="w-3 h-3"></i>
+                        Как это работает на практике
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-bold mb-5 tracking-tight text-slate-900">
+                        Единая образовательная траектория
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Представьте: на уроке математики ученик изучает <span class="font-semibold text-slate-900">системы координат</span>. В Кванториуме он применяет их для создания <span class="font-semibold text-slate-900">3D-модели</span>. А дома на KvantLearn - пишет <span class="font-semibold text-slate-900">игру на Godot</span>, где эти координаты становятся основой механик.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Так теория из школы превращается в реальный навык, а навык - в портфолио проектов. Это и есть <span class="font-semibold text-slate-900">современное IT-образование</span>.
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-slate-50 to-indigo-50/30 rounded-2xl p-6 border border-slate-100">
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-slate-100">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold text-blue-600">1</span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-sm mb-1">В школе</div>
+                                <div class="text-xs text-slate-500">Изучает геометрию и физику</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400"></i>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-slate-100">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold text-indigo-600">2</span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-sm mb-1">В Кванториуме</div>
+                                <div class="text-xs text-slate-500">Создаёт 3D-модель или робота</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400"></i>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-100">
+                            <div class="w-10 h-10 rounded-lg bg-pink-500 flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold text-white">3</span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-sm mb-1">На KvantLearn</div>
+                                <div class="text-xs text-slate-500">Разрабатывает собственный проект</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/30 transition">
-        <div class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-4">
-          <i data-lucide="book-open" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-bold text-slate-900 text-base">Закрепление школьной программы</h3>
-        <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-          Физика, математика и информатика перестают быть абстрактными: дети собирают схемы, пишут код и считают параметры реальных устройств.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/30 transition">
-        <div class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-4">
-          <i data-lucide="lightbulb" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-bold text-slate-900 text-base">Проектное мышление</h3>
-        <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-          Вместо контрольных — проекты. Ребята учатся ставить задачу, искать решения, работать в команде и презентовать результат.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/30 transition">
-        <div class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-4">
-          <i data-lucide="target" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-bold text-slate-900 text-base">Профориентация и выбор пути</h3>
-        <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-          Попробовав себя в разных направлениях, ребёнок осознанно выбирает профиль в старших классах и будущую профессию.
-        </p>
-      </div>
-    </div>
-
-    <!-- Схема связи -->
-    <div class="mt-10 p-6 rounded-2xl bg-gradient-to-r from-indigo-50 to-slate-50 border border-indigo-100">
-      <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-center">
-        <div class="flex-1 p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
-          <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center mx-auto mb-2">
-            <i data-lucide="school" class="w-5 h-5"></i>
-          </div>
-          <div class="text-sm font-bold text-slate-900">Школа</div>
-          <div class="text-xs text-slate-500 mt-1">Теория и база</div>
-        </div>
-
-        <div class="flex items-center text-indigo-400">
-          <i data-lucide="arrow-right" class="w-6 h-6 rotate-90 md:rotate-0"></i>
-        </div>
-
-        <div class="flex-1 p-4 rounded-xl bg-white border border-indigo-200 shadow-sm">
-          <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-2">
-            <i data-lucide="atom" class="w-5 h-5"></i>
-          </div>
-          <div class="text-sm font-bold text-slate-900">Кванториум</div>
-          <div class="text-xs text-slate-500 mt-1">Практика и проекты</div>
-        </div>
-
-        <div class="flex items-center text-indigo-400">
-          <i data-lucide="arrow-right" class="w-6 h-6 rotate-90 md:rotate-0"></i>
-        </div>
-
-        <div class="flex-1 p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
-          <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center mx-auto mb-2">
-            <i data-lucide="briefcase" class="w-5 h-5"></i>
-          </div>
-          <div class="text-sm font-bold text-slate-900">Профессия</div>
-          <div class="text-xs text-slate-500 mt-1">Осознанный выбор</div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- Направления подготовки -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <div class="flex items-center justify-between mb-8">
-    <div>
-      <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Направления подготовки</h2>
-      <p class="text-sm text-slate-500 mt-1">Выбери свой квантум и начни путь в технологиях</p>
-    </div>
-    <a href="{% url 'catalog:material_list' %}" class="hidden sm:inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-      <span>Все материалы</span>
-      <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-    </a>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-    {% for code, label in CATALOG_DIRECTIONS %}
-      <a href="{% url 'catalog:material_list' %}?direction={{ code }}"
-         class="group p-5 rounded-2xl bg-white border border-slate-200 hover:border-indigo-300 hover:shadow-md transition">
-        <div class="flex items-center justify-between mb-3">
-          <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition">
-            <i data-lucide="sparkles" class="w-5 h-5"></i>
-          </div>
-          <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition"></i>
+<!-- ================= НАПРАВЛЕНИЯ ================= -->
+<section id="directions" class="py-10 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-pink-50 text-pink-700 rounded-full text-sm font-semibold mb-4">
+                <i data-lucide="layers" class="w-4 h-4"></i>
+                Направления
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                Направления<br>
+                <span class="bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">подготовки</span>
+            </h2>
+            <p class="text-base sm:text-lg text-slate-600">
+                Выбери свой квантум и начни путь в технологиях. Каждое направление разработано преподавателями Кванториума.
+            </p>
         </div>
-        <h3 class="font-bold text-slate-900 text-sm">{{ label }}</h3>
-        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-          Практические материалы, проекты и задания по направлению «{{ label }}».
-        </p>
-      </a>
-    {% endfor %}
-  </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for code, label in CATALOG_DIRECTIONS %}
+            <a href="{% url 'catalog:material_list' %}?direction={{ code }}"
+               class="group relative bg-white rounded-3xl p-8 border border-slate-200 card-hover overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400/10 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="sparkles" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-400 group-hover:text-indigo-600 transition"></i>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-3">{{ label }}</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                        Практические материалы, проекты и задания по направлению «{{ label }}».
+                    </p>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-slate-100">
+                        <div class="flex items-center gap-2 text-sm text-slate-500">
+                            <i data-lucide="book" class="w-4 h-4"></i>
+                            <span>Материалы</span>
+                        </div>
+                        <span class="text-sm font-semibold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Подробнее
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="folder-open" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-base font-semibold text-slate-800">Направления пока не добавлены</h3>
+                <p class="text-xs text-slate-500 mt-1">Список направлений появится позже.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 
-<!-- Последние опубликованные материалы -->
-<section class="bg-slate-50/50 border-y border-slate-200 py-14">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Новые учебные материалы</h2>
-        <p class="text-sm text-slate-500 mt-1">Недавно опубликованные курсы и руководства</p>
-      </div>
-      <a href="{% url 'catalog:material_list' %}" class="inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-        <span>Все материалы</span>
-        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-      </a>
-    </div>
-
-    {% if latest_materials %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {% for material in latest_materials %}
-          {% include "catalog/includes/material_card.html" with material=material %}
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm">
-        <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center mx-auto mb-3">
-          <i data-lucide="folder-open" class="w-6 h-6"></i>
+<!-- ================= ПРЕИМУЩЕСТВА ================= -->
+<section id="advantages" class="py-10 bg-gradient-to-b from-white to-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold mb-4">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                Почему KvantLearn
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                Всё, что нужно для<br>
+                <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">старта в IT</span>
+            </h2>
         </div>
-        <h3 class="text-base font-semibold text-slate-800">Пока нет опубликованных материалов</h3>
-        <p class="text-xs text-slate-500 mt-1">Педагоги еще готовят первые курсы.</p>
-      </div>
-    {% endif %}
-  </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover ">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center mb-4">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-indigo-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Проверенные методики</h3>
+                <p class="text-sm text-slate-600">Программы разработаны педагогами Кванториума и проверены на реальных учениках</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-4">
+                    <i data-lucide="list-tree" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Понятная структура</h3>
+                <p class="text-sm text-slate-600">Курсы разбиты на модули и уроки — видно, с чего начать и что изучать дальше</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                <div class="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-4">
+                    <i data-lucide="clock" class="w-6 h-6 text-teal-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Доступ 24/7</h3>
+                <p class="text-sm text-slate-600">Материалы открыты в любое время — учитесь в своём темпе и возвращайтесь к урокам</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
+                    <i data-lucide="unlock" class="w-6 h-6 text-emerald-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Свободный доступ</h3>
+                <p class="text-sm text-slate-600">Учебные материалы открыты для всех — без оплаты и скрытых условий</p>
+            </div>
+
+            </div>
+        </div>
+    </div>
 </section>
 
-<!-- Блок преимуществ -->
-<section class="bg-white py-12">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="flex items-start space-x-4">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-          <i data-lucide="book-check" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h4 class="font-bold text-slate-900 text-sm">Проверенные наставниками знания</h4>
-          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Все материалы составлены педагогами Кванториума и апробированы на реальных занятиях.</p>
-        </div>
-      </div>
+<!-- ================= CTA ================= -->
+<section class="py-20 bg-white">
+    <div class="max-w-full mx-auto ">
+        <div class="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 p-8 md:p-16 overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute inset-0 grid-bg opacity-20"></div>
 
-      <div class="flex items-start space-x-4">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-          <i data-lucide="video" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h4 class="font-bold text-slate-900 text-sm">Видео, схемы и примеры кода</h4>
-          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Уроки содержат пошаговые инструкции, синтаксис кода, видеодемонстрации и иллюстрации.</p>
-        </div>
-      </div>
+            <div class="relative text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur text-white/90 rounded-full text-sm font-semibold mb-6 border border-white/20">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    Присоединяйтесь бесплатно
+                </div>
 
-      <div class="flex items-start space-x-4">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-          <i data-lucide="zap" class="w-5 h-5"></i>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-6 leading-tight">
+                    Начните свой путь<br>
+                    в мире IT уже сегодня
+                </h2>
+
+                <p class="text-base sm:text-lg text-indigo-100 max-w-4xl mx-auto mb-10 leading-relaxed">
+                    Получите доступ ко всем курсам, материалам и сообществу KvantLearn - совершенно бесплатно.
+                </p>
+
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="{% url 'catalog:material_list' %}" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 rounded-xl font-semibold hover:bg-indigo-50 transition">
+                        <i data-lucide="compass" class="w-5 h-5"></i>
+                        Перейти в каталог
+                    </a>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm text-indigo-200">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Без оплаты</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Без обязательств</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Доступ сразу</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-          <h4 class="font-bold text-slate-900 text-sm">Быстрый и открытый доступ</h4>
-          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Ученики могут читать любые уроки без обязательной регистрации и в удобном для себя темпе.</p>
-        </div>
-      </div>
     </div>
-  </div>
 </section>
+
 {% endblock %}

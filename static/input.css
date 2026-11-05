@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./custom.css";
 @plugin "@tailwindcss/typography";
 
 /* Указываем Tailwind, где искать классы в Django-шаблонах и Python-файлах */
