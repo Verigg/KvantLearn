@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Статистика -->
-                <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
+                <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60 text-center">
                     <div>
                         <div class="text-3xl font-bold text-slate-900">100%</div>
                         <div class="text-sm text-slate-500 mt-1">Бесплатно</div>
@@ -47,76 +47,84 @@
                 </div>
             </div>
 
-            <!-- Визуальный блок -->
-            <div class="relative animate-fade-up">
-                <div class="relative bg-white rounded-3xl p-8 border border-slate-200/60 glow">
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                        <div class="ml-4 text-xs font-mono text-slate-400">kvantlearn.ru</div>
-                    </div>
+           <div class="relative animate-fade-up">
+  <div class="relative bg-white rounded-3xl p-4 border border-slate-200/60 glow overflow-hidden">
 
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
-                            <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center">
-                                <i data-lucide="code-2" class="w-5 h-5 text-white"></i>
-                            </div>
-                            <div class="flex-1">
-                                <div class="font-semibold text-sm">Программирование</div>
-                                <div class="text-xs text-slate-500">Python · JavaScript · Scratch</div>
-                            </div>
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
-                        </div>
+    <!-- Карусель -->
+    <div class="carousel relative rounded-2xl overflow-hidden aspect-[4/4]" id="itCarousel">
+      <!-- Слайды -->
+      <div class="carousel-track flex transition-transform duration-500 ease-in-out">
 
-                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
-                            <div class="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center">
-                                <i data-lucide="box" class="w-5 h-5 text-white"></i>
-                            </div>
-                            <div class="flex-1">
-                                <div class="font-semibold text-sm">3D-моделирование</div>
-                                <div class="text-xs text-slate-500">Blender · Unity · Godot</div>
-                            </div>
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
-                        </div>
+        <!-- Слайд 1 -->
+        <div class="carousel-slide min-w-full relative">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=800&fit=crop"
+               alt="Абстрактный хайтек" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent"></div>
 
-                        <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border border-pink-100">
-                            <div class="w-10 h-10 rounded-lg bg-pink-500 flex items-center justify-center">
-                                <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
-                            </div>
-                            <div class="flex-1">
-                                <div class="font-semibold text-sm">Робототехника</div>
-                                <div class="text-xs text-slate-500">Arduino · LEGO · датчики</div>
-                            </div>
-                            <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 pt-6 border-t border-slate-100">
-                        <div class="flex justify-between text-sm mb-2">
-                            <span class="font-medium">Ваш прогресс</span>
-                            <span class="font-mono text-indigo-600">73%</span>
-                        </div>
-                        <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full w-[73%] bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="absolute -top-4 -right-4 bg-white rounded-2xl p-3 border border-slate-200 shadow-lg float-slow">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="award" class="w-5 h-5 text-yellow-500"></i>
-                        <span class="text-sm font-semibold">+100 XP</span>
-                    </div>
-                </div>
-
-                <div class="absolute -bottom-4 -left-4 bg-white rounded-2xl p-3 border border-slate-200 shadow-lg float-medium">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
-                        <span class="text-sm font-semibold">7 дней подряд</span>
-                    </div>
-                </div>
+          <!-- Плашка под текстом (единый стиль) -->
+          <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md shadow-xl p-4">
+              <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20"></div>
+              <div class="relative">
+                <span class="text-[11px] font-semibold uppercase tracking-widest text-white/80">Направление</span>
+                <h3 class="text-xl font-bold text-white drop-shadow-sm">Робототехника</h3>
+                <p class="text-sm text-white/85">Arduino · LEGO · датчики</p>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Слайд 2 -->
+        <div class="carousel-slide min-w-full relative">
+          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=800&fit=crop"
+               alt="Абстрактные цифровые сети" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent"></div>
+
+          <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md shadow-xl p-4">
+              <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20"></div>
+              <div class="relative">
+                <span class="text-[11px] font-semibold uppercase tracking-widest text-white/80">Направление</span>
+                <h3 class="text-xl font-bold text-white drop-shadow-sm">3D-моделирование</h3>
+                <p class="text-sm text-white/85">Blender · Unity · Godot</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Слайд 3 -->
+        <div class="carousel-slide min-w-full relative">
+          <img src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=800&fit=crop"
+               alt="Абстрактный цифровой мир" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/30 to-transparent"></div>
+
+          <div class="absolute bottom-0 left-0 right-0 p-5 text-white">
+            <div class="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md shadow-xl p-4">
+              <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20"></div>
+              <div class="relative">
+                <span class="text-[11px] font-semibold uppercase tracking-widest text-white/80">Направление</span>
+                <h3 class="text-xl font-bold text-white drop-shadow-sm">Программирование</h3>
+                <p class="text-sm text-white/85">Python · Web · ИИ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Кнопки навигации -->
+      <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all hover:scale-110">
+        <i data-lucide="chevron-left" class="w-5 h-5 text-slate-700"></i>
+      </button>
+      <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all hover:scale-110">
+        <i data-lucide="chevron-right" class="w-5 h-5 text-slate-700"></i>
+      </button>
+
+      <!-- Индикаторы -->
+      <div class="carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"></div>
+    </div>
+  </div>
+</div>
         </div>
     </div>
 </section>
@@ -371,8 +379,7 @@
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for code, label in CATALOG_DIRECTIONS %}
-            <a href="{% url 'catalog:material_list' %}?direction={{ code }}"
-               class="group relative bg-white rounded-3xl p-8 border border-slate-200 card-hover overflow-hidden">
+            <a href="{% url 'catalog:material_list' %}?direction={{ code }}" class="group relative bg-white rounded-3xl p-8 border border-slate-200 card-hover overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400/10 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
 
                 <div class="relative">
@@ -460,8 +467,8 @@
                 <p class="text-sm text-slate-600">Учебные материалы открыты для всех — без оплаты и скрытых условий</p>
             </div>
 
-            </div>
         </div>
+    </div>
     </div>
 </section>
 
@@ -514,4 +521,52 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js%}
+<script>
+    (function () {
+        const track = document.querySelector('.carousel-track');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        const dotsContainer = document.querySelector('.carousel-dots');
+
+        let current = 0;
+        const total = slides.length;
+
+        // Создаём точки
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all';
+            if (i === 0) dot.classList.add('!bg-white', '!w-6');
+            dot.addEventListener('click', () => goTo(i));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = dotsContainer.querySelectorAll('button');
+
+        function goTo(index) {
+            current = (index + total) % total;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            dots.forEach((d, i) => {
+                d.classList.toggle('!bg-white', i === current);
+                d.classList.toggle('!w-6', i === current);
+            });
+        }
+
+        prevBtn.addEventListener('click', () => goTo(current - 1));
+        nextBtn.addEventListener('click', () => goTo(current + 1));
+
+        // Автопрокрутка
+        let timer = setInterval(() => goTo(current + 1), 5000);
+
+        // Пауза при наведении
+        const carousel = document.querySelector('.carousel');
+        carousel.addEventListener('mouseenter', () => clearInterval(timer));
+        carousel.addEventListener('mouseleave', () => {
+            timer = setInterval(() => goTo(current + 1), 5000);
+        });
+    })();
+</script>
 {% endblock %}
