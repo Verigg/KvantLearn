@@ -84,6 +84,12 @@
                   <i data-lucide="users" class="w-4 h-4"></i>
                   <span>Пользователи</span>
                 </a>
+                {% if user.role == 'admin' and user.is_approved %}
+                  <a href="{% url 'core:stats' %}" class="px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-1.5 {% if request.resolver_match.url_name in 'stats,stats_material,stats_teacher,stats_short' %}text-indigo-600 bg-indigo-50{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                    <span>Статистика</span>
+                  </a>
+                {% endif %}
               {% endif %}
             {% endif %}
           </nav>
@@ -160,6 +166,11 @@
           <a href="{% url 'core:users_list' %}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100">
             Управление пользователями
           </a>
+          {% if user.role == 'admin' and user.is_approved %}
+            <a href="{% url 'core:stats' %}" class="block px-3 py-2 rounded-lg text-base font-medium {% if request.resolver_match.url_name in 'stats,stats_material,stats_teacher,stats_short' %}text-indigo-600 bg-indigo-50{% else %}text-slate-700 hover:bg-slate-100{% endif %}">
+              Статистика посещений
+            </a>
+          {% endif %}
         {% endif %}
         <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
           <div class="text-sm">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SiteSettings
+from .models import PageVisit, SiteSettings
 
 
 @admin.register(SiteSettings)
@@ -12,3 +12,12 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(PageVisit)
+class PageVisitAdmin(admin.ModelAdmin):
+    list_display = ('path', 'material', 'teacher', 'session_key', 'timestamp')
+    list_filter = ('timestamp', 'material', 'teacher')
+    search_fields = ('path', 'session_key', 'material__title', 'teacher__username', 'teacher__full_name')
+    readonly_fields = ('path', 'material', 'teacher', 'session_key', 'timestamp')
+

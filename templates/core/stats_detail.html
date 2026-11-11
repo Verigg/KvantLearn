@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if detail_type == 'material' %}
+    Статистика материала «{{ material.title }}»
+  {% else %}
+    Статистика педагога {{ teacher.display_name }}
+  {% endif %}
+  — {{ site_settings.site_name|default:"KvantLearn" }}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Кнопка возврата к общей статистике -->
+  <div class="mb-6">
+    <a href="{% url 'core:stats' %}?period={{ period }}"
+       class="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      <span>Назад к общей статистике</span>
+    </a>
+  </div>
+
+  <!-- Шапка страницы сущности -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+    <div>
+      <div class="flex items-center space-x-2 text-xs font-semibold {% if detail_type == 'material' %}text-indigo-700 bg-indigo-50{% else %}text-purple-700 bg-purple-50{% endif %} px-3 py-1 rounded-full w-fit mb-2">
+        {% if detail_type == 'material' %}
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span>Детализация по материалу</span>
+        {% else %}
+          <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+          <span>Детализация по педагогу</span>
+        {% endif %}
+      </div>
+
+      {% if detail_type == 'material' %}
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ material.title }}</h1>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-2">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 font-medium">
+            {{ material.get_direction_display }}
+          </span>
+          {% if material.author %}
+            <span class="flex items-center space-x-1">
+              <span>Автор:</span>
+              <a href="{% url 'core:stats_teacher' pk=material.author.pk %}?period={{ period }}" class="text-indigo-600 hover:underline font-medium">
+                {{ material.author.display_name }}
+              </a>
+            </span>
+          {% endif %}
+          <span class="text-slate-300">•</span>
+          <span>Уроков: {{ material.total_lessons_count }}</span>
+          <span class="text-slate-300">•</span>
+          <a href="{% url 'catalog:material_detail' slug=material.slug %}" target="_blank" class="text-indigo-600 hover:underline inline-flex items-center space-x-1">
+            <span>Открыть на сайте</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      {% else %}
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ teacher.display_name }}</h1>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-2">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-lg bg-purple-50 text-purple-700 font-medium">
+            {{ teacher.get_role_display }}
+          </span>
+          <span class="text-slate-300">•</span>
+          <span>Логин: @{{ teacher.username }}</span>
+          <span class="text-slate-300">•</span>
+          <span>Опубликованных курсов: {{ total_courses|default:"0" }}</span>
+          {% if teacher.email %}
+            <span class="text-slate-300">•</span>
+            <span>{{ teacher.email }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Переключатель периодов -->
+    <div class="inline-flex p-1 bg-slate-200/70 rounded-2xl border border-slate-200 shadow-inner space-x-1 self-start md:self-center">
+      <a href="?period=3m"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == '3m' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За прошлые 3 месяца
+      </a>
+      <a href="?period=year"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == 'year' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За текущий год
+      </a>
+      <a href="?period=all"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == 'all' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За всё время
+      </a>
+    </div>
+  </div>
+
+  <!-- Карточки метрик (KPI) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Всего просмотров</p>
+        <p class="text-3xl font-extrabold text-slate-900 mt-2">{{ total_visits|default:"0" }}</p>
+        <p class="text-xs text-slate-400 mt-1">
+          {% if period == '3m' %}За последние 90 дней{% elif period == 'year' %}В текущем году{% else %}За всё время{% endif %}
+        </p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl {% if detail_type == 'material' %}bg-indigo-50 text-indigo-600{% else %}bg-purple-50 text-purple-600{% endif %} flex items-center justify-center">
+        <i data-lucide="eye" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Уникальные сессии</p>
+        <p class="text-3xl font-extrabold text-slate-900 mt-2">{{ unique_sessions|default:"0" }}</p>
+        <p class="text-xs text-slate-400 mt-1">Уникальные посетители</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center">
+        <i data-lucide="users" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        {% if detail_type == 'material' %}
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Просмотров на сессию</p>
+          <p class="text-3xl font-extrabold text-slate-900 mt-2">
+            {% if unique_sessions %}{{ total_visits|default:0 }}{% else %}0{% endif %}
+          </p>
+          <p class="text-xs text-slate-400 mt-1">Степень вовлеченности</p>
+        {% else %}
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Курсов автора</p>
+          <p class="text-3xl font-extrabold text-slate-900 mt-2">{{ total_courses|default:"0" }}</p>
+          <p class="text-xs text-slate-400 mt-1">Всего материалов на платформе</p>
+        {% endif %}
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <i data-lucide="activity" class="w-6 h-6"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Карточка графика Chart.js -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <div class="flex items-center space-x-2">
+          <i data-lucide="line-chart" class="w-5 h-5 {% if detail_type == 'material' %}text-indigo-600{% else %}text-purple-600{% endif %}"></i>
+          <h2 class="text-xl font-bold text-slate-900">
+            {% if detail_type == 'material' %}
+              График посещений материала
+            {% else %}
+              График посещений материалов педагога
+            {% endif %}
+          </h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">
+          {% if period == 'all' %}
+            Помесячная динамика за всё время
+          {% else %}
+            Ежедневная динамика за выбранный период
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-4 text-xs font-medium text-slate-500">
+        <span class="inline-flex items-center space-x-1.5">
+          <span class="w-3 h-3 rounded-full {% if detail_type == 'material' %}bg-indigo-600{% else %}bg-purple-600{% endif %} inline-block"></span>
+          <span>Просмотры</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Холст графика -->
+    <div class="relative w-full h-[320px] sm:h-[400px]">
+      <canvas id="detailVisitsChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Дополнительные таблицы распределения -->
+  {% if detail_type == 'teacher' and teacher_materials %}
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="layers" class="w-5 h-5 text-purple-600"></i>
+          <h2 class="text-lg font-bold text-slate-900">Материалы педагога</h2>
+        </div>
+        <span class="text-xs text-slate-400 font-medium">за выбранный период</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 pb-2">
+            <tr>
+              <th class="py-2 font-semibold">Материал</th>
+              <th class="py-2 font-semibold">Направление</th>
+              <th class="py-2 font-semibold text-right">Просмотры</th>
+              <th class="py-2 font-semibold text-right"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for item in teacher_materials %}
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 font-medium text-slate-800">
+                  <a href="{% url 'catalog:material_detail' slug=item.material.slug %}" class="hover:text-indigo-600 hover:underline">
+                    {{ item.material.title }}
+                  </a>
+                </td>
+                <td class="py-3 text-xs text-slate-500">
+                  {{ item.material.get_direction_display }}
+                </td>
+                <td class="py-3 text-right">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">
+                    {{ item.views_count }}
+                  </span>
+                </td>
+                <td class="py-3 text-right">
+                  <a href="{% url 'core:stats_material' pk=item.material.pk %}?period={{ period }}"
+                     class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-lg transition">
+                    Детали курса &rarr;
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if detail_type == 'material' and lesson_visits %}
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+          <h2 class="text-lg font-bold text-slate-900">Просмотры страниц уроков</h2>
+        </div>
+        <span class="text-xs text-slate-400 font-medium">за выбранный период</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 pb-2">
+            <tr>
+              <th class="py-2 font-semibold">URL урока</th>
+              <th class="py-2 font-semibold text-right">Число просмотров</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for item in lesson_visits %}
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 font-mono text-xs text-slate-700">
+                  {{ item.path }}
+                </td>
+                <td class="py-3 text-right">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+                    {{ item.views_count }}
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+<!-- Безопасная передача данных в Chart.js через json_script -->
+{{ chart_labels|json_script:"chart-labels" }}
+{{ chart_data|json_script:"chart-data" }}
+
+<!-- Подключение Chart.js через CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const labelsEl = document.getElementById('chart-labels');
+    const dataEl = document.getElementById('chart-data');
+
+    if (!labelsEl || !dataEl) return;
+
+    const labels = JSON.parse(labelsEl.textContent);
+    const data = JSON.parse(dataEl.textContent);
+
+    const ctx = document.getElementById('detailVisitsChart');
+    if (!ctx) return;
+
+    const isTeacher = "{{ detail_type }}" === "teacher";
+    const primaryColor = isTeacher ? '#9333ea' : '#4f46e5';
+    const fillAlpha = isTeacher ? 'rgba(147, 51, 234, 0.35)' : 'rgba(99, 102, 241, 0.35)';
+
+    const chartContext = ctx.getContext('2d');
+    const gradient = chartContext.createLinearGradient(0, 0, 0, 350);
+    gradient.addColorStop(0, fillAlpha);
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.00)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Просмотры',
+          data: data,
+          borderColor: primaryColor,
+          borderWidth: 2.5,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: primaryColor,
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointRadius: labels.length > 50 ? 1.5 : 3.5,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: isTeacher ? '#7e22ce' : '#4338ca',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleColor: '#ffffff',
+            bodyColor: '#e2e8f0',
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
+            borderColor: '#334155',
+            borderWidth: 1,
+            callbacks: {
+              label: function (context) {
+                return ` Посещений: ${context.parsed.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              color: '#64748b',
+              font: {
+                size: 11,
+                family: 'Inter, system-ui, sans-serif',
+              },
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 12,
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f1f5f9',
+              drawBorder: false,
+            },
+            ticks: {
+              color: '#64748b',
+              font: {
+                size: 11,
+                family: 'Inter, system-ui, sans-serif',
+              },
+              precision: 0,
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

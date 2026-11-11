@@ -127,10 +127,12 @@ class LessonDetailView(DetailView):
 
     def get_object(self, queryset=None):
         material_slug = self.kwargs.get('slug')
+        filter_kwargs = {'pk': self.kwargs.get('pk')}
+        if material_slug:
+            filter_kwargs['module__material__slug'] = material_slug
         lesson = get_object_or_404(
             Lesson.objects.select_related('module__material', 'module__material__author'),
-            pk=self.kwargs.get('pk'),
-            module__material__slug=material_slug,
+            **filter_kwargs,
         )
         material = lesson.module.material
         user = self.request.user

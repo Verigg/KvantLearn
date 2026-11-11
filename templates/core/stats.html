@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика посещений — {{ site_settings.site_name|default:"KvantLearn" }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Заголовок и переключатель периодов -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+    <div>
+      <div class="flex items-center space-x-2 text-xs font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full w-fit mb-2">
+        <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+        <span>Панель главного администратора</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Статистика посещений</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Мониторинг просмотров курсов, вовлеченности учащихся и популярности педагогов
+      </p>
+    </div>
+
+    <!-- Переключатель периодов (обычные ссылки с GET-параметром) -->
+    <div class="inline-flex p-1 bg-slate-200/70 rounded-2xl border border-slate-200 shadow-inner space-x-1">
+      <a href="?period=3m"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == '3m' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За прошлые 3 месяца
+      </a>
+      <a href="?period=year"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == 'year' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За текущий год
+      </a>
+      <a href="?period=all"
+         class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {% if period == 'all' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-white/60{% endif %}">
+        За всё время
+      </a>
+    </div>
+  </div>
+
+  <!-- Карточки ключевых метрик (KPI) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Всего посещений -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Всего просмотров</p>
+        <p class="text-3xl font-extrabold text-slate-900 mt-2">{{ total_visits|default:"0" }}</p>
+        <p class="text-xs text-slate-400 mt-1">
+          {% if period == '3m' %}За последние 90 дней{% elif period == 'year' %}В текущем году{% else %}За всю историю{% endif %}
+        </p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+        <i data-lucide="eye" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <!-- Уникальные сессии -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Уникальные сессии</p>
+        <p class="text-3xl font-extrabold text-slate-900 mt-2">{{ unique_sessions|default:"0" }}</p>
+        <p class="text-xs text-slate-400 mt-1">Уникальные посетители</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+        <i data-lucide="users" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <!-- Топ материалов в ротации -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Лидер просмотров</p>
+        <p class="text-lg font-bold text-slate-900 mt-2 truncate max-w-[170px]" title="{{ top_materials.0.material.title|default:'—' }}">
+          {% if top_materials.0 %}{{ top_materials.0.material.title }}{% else %}—{% endif %}
+        </p>
+        <p class="text-xs text-indigo-600 font-semibold mt-1">
+          {% if top_materials.0 %}{{ top_materials.0.views_count }} просм.{% else %}Нет данных{% endif %}
+        </p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <i data-lucide="book-open" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <!-- Ведущий педагог -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ведущий педагог</p>
+        <p class="text-lg font-bold text-slate-900 mt-2 truncate max-w-[170px]" title="{{ top_teachers.0.teacher.display_name|default:'—' }}">
+          {% if top_teachers.0 %}{{ top_teachers.0.teacher.display_name }}{% else %}—{% endif %}
+        </p>
+        <p class="text-xs text-purple-600 font-semibold mt-1">
+          {% if top_teachers.0 %}{{ top_teachers.0.views_count }} суммарных просм.{% else %}Нет данных{% endif %}
+        </p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+        <i data-lucide="award" class="w-6 h-6"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Таблицы: Топ-5 материалов и Топ-5 педагогов -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    
+    <!-- Таблица: Топ-5 материалов -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="trending-up" class="w-5 h-5 text-indigo-600"></i>
+            <h2 class="text-lg font-bold text-slate-900">Топ-5 материалов</h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">по просмотрам</span>
+        </div>
+
+        {% if top_materials %}
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 pb-2">
+                <tr>
+                  <th class="py-2 font-semibold">Название</th>
+                  <th class="py-2 font-semibold">Автор</th>
+                  <th class="py-2 font-semibold text-right">Просмотры</th>
+                  <th class="py-2 font-semibold text-right"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                {% for item in top_materials %}
+                  <tr class="hover:bg-slate-50 transition group">
+                    <td class="py-3 font-medium text-slate-800 pr-2">
+                      <div class="truncate max-w-[220px]" title="{{ item.material.title }}">
+                        {{ item.material.title }}
+                      </div>
+                    </td>
+                    <td class="py-3 text-xs text-slate-500 whitespace-nowrap">
+                      {% if item.material.author %}
+                        <a href="{% url 'core:stats_teacher' pk=item.material.author.pk %}?period={{ period }}"
+                           class="hover:text-indigo-600 hover:underline inline-flex items-center space-x-1">
+                          <i data-lucide="user" class="w-3 h-3 text-slate-400"></i>
+                          <span>{{ item.material.author.display_name }}</span>
+                        </a>
+                      {% else %}
+                        <span class="text-slate-400">—</span>
+                      {% endif %}
+                    </td>
+                    <td class="py-3 text-right whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+                        {{ item.views_count }}
+                      </span>
+                    </td>
+                    <td class="py-3 text-right pl-2 whitespace-nowrap">
+                      <a href="{% url 'core:stats_material' pk=item.material.pk %}?period={{ period }}"
+                         class="inline-flex items-center space-x-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50/50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition"
+                         title="Смотреть детальный график по материалу">
+                        <span>Детали</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="py-12 text-center text-slate-400">
+            <i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
+            <p class="text-sm font-medium">Нет данных о посещениях материалов за выбранный период.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Таблица: Топ-5 педагогов -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="users" class="w-5 h-5 text-purple-600"></i>
+            <h2 class="text-lg font-bold text-slate-900">Топ-5 педагогов</h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">по суммарным просмотрам</span>
+        </div>
+
+        {% if top_teachers %}
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 pb-2">
+                <tr>
+                  <th class="py-2 font-semibold">ФИО / Имя пользователя</th>
+                  <th class="py-2 font-semibold">Статус</th>
+                  <th class="py-2 font-semibold text-right">Просмотры</th>
+                  <th class="py-2 font-semibold text-right"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                {% for item in top_teachers %}
+                  <tr class="hover:bg-slate-50 transition group">
+                    <td class="py-3 font-medium text-slate-800 pr-2">
+                      <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-xs">
+                          {{ item.teacher.display_name|slice:":1"|upper }}
+                        </div>
+                        <span class="truncate max-w-[200px]" title="{{ item.teacher.display_name }}">
+                          {{ item.teacher.display_name }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="py-3 text-xs text-slate-500 whitespace-nowrap">
+                      {% if item.teacher.is_administrator %}
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-800">
+                          Админ
+                        </span>
+                      {% else %}
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-800">
+                          Педагог
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td class="py-3 text-right whitespace-nowrap">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">
+                        {{ item.views_count }}
+                      </span>
+                    </td>
+                    <td class="py-3 text-right pl-2 whitespace-nowrap">
+                      <a href="{% url 'core:stats_teacher' pk=item.teacher.pk %}?period={{ period }}"
+                         class="inline-flex items-center space-x-1 text-xs font-semibold text-purple-600 hover:text-purple-800 bg-purple-50/50 hover:bg-purple-100 px-2.5 py-1 rounded-lg transition"
+                         title="Смотреть детальный график по педагогу">
+                        <span>Детали</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="py-12 text-center text-slate-400">
+            <i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
+            <p class="text-sm font-medium">Нет данных об авторах за выбранный период.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Карточка линейного графика посещений Chart.js -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <div class="flex items-center space-x-2">
+          <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-600"></i>
+          <h2 class="text-xl font-bold text-slate-900">Динамика посещаемости</h2>
+        </div>
+        <p class="text-xs text-slate-500 mt-1">
+          {% if period == 'all' %}
+            Распределение посещений по месяцам за всё время
+          {% else %}
+            Ежедневное распределение посещений за выбранный период
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-4 text-xs font-medium text-slate-500">
+        <span class="inline-flex items-center space-x-1.5">
+          <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block"></span>
+          <span>Просмотры</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Область графика -->
+    <div class="relative w-full h-[320px] sm:h-[400px]">
+      <canvas id="visitsChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- Безопасная передача данных в Chart.js через json_script -->
+{{ chart_labels|json_script:"chart-labels" }}
+{{ chart_data|json_script:"chart-data" }}
+
+<!-- Подключение Chart.js через CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const labelsEl = document.getElementById('chart-labels');
+    const dataEl = document.getElementById('chart-data');
+
+    if (!labelsEl || !dataEl) return;
+
+    const labels = JSON.parse(labelsEl.textContent);
+    const data = JSON.parse(dataEl.textContent);
+
+    const ctx = document.getElementById('visitsChart');
+    if (!ctx) return;
+
+    // Создаем мягкий градиент под линией графика
+    const chartContext = ctx.getContext('2d');
+    const gradient = chartContext.createLinearGradient(0, 0, 0, 350);
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.00)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Просмотры',
+          data: data,
+          borderColor: '#4f46e5',
+          borderWidth: 2.5,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: '#4f46e5',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointRadius: labels.length > 50 ? 1.5 : 3.5,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#4338ca',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleColor: '#ffffff',
+            bodyColor: '#e2e8f0',
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
+            borderColor: '#334155',
+            borderWidth: 1,
+            callbacks: {
+              label: function (context) {
+                return ` Посещений: ${context.parsed.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              color: '#64748b',
+              font: {
+                size: 11,
+                family: 'Inter, system-ui, sans-serif',
+              },
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 12,
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f1f5f9',
+              drawBorder: false,
+            },
+            ticks: {
+              color: '#64748b',
+              font: {
+                size: 11,
+                family: 'Inter, system-ui, sans-serif',
+              },
+              precision: 0,
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

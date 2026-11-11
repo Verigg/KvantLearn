@@ -420,6 +420,27 @@
     </div>
 </section>
 
+{% if latest_materials %}
+<section class="py-12 bg-slate-50 border-b border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Новые материалы</h2>
+                <p class="text-sm text-slate-500 mt-1">Недавно опубликованные курсы и уроки</p>
+            </div>
+            <a href="{% url 'catalog:material_list' %}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                Все материалы <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for material in latest_materials %}
+                {% include "catalog/includes/material_card.html" with material=material %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <!-- ================= ПРЕИМУЩЕСТВА ================= -->
 <section id="advantages" class="py-10 bg-gradient-to-b from-white to-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
