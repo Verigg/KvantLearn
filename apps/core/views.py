@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.functions import TruncDate, TruncMonth
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -233,55 +233,58 @@ class StatsOverviewView(AdminRequiredMixin, TemplateView):
         stats = process_stats_queryset(PageVisit.objects.all(), period)
         qs = stats['queryset']
 
-        # Топ-5 материалов по просмотрам
-        top_mat_data = (
+        # Просмотры по материалам и педагогам за период: {id: count}
+        mat_views = dict(
             qs.filter(material__isnull=False)
-            .values('material_id')
-            .annotate(views_count=Count('id'))
-            .order_by('-views_count')[:5]
+            .values_list('material_id')
+            .annotate(c=Count('id'))
         )
-        mat_ids = [item['material_id'] for item in top_mat_data]
-        materials_by_id = {
-            m.id: m for m in Material.objects.filter(id__in=mat_ids).select_related('author')
-        }
-        top_materials = []
-        for item in top_mat_data:
-            mat = materials_by_id.get(item['material_id'])
-            if mat:
-                top_materials.append({
-                    'material': mat,
-                    'views_count': item['views_count'],
-                })
-
-        # Топ-5 педагогов по просмотрам их материалов
-        top_teach_data = (
+        teacher_views = dict(
             qs.filter(teacher__isnull=False)
-            .values('teacher_id')
-            .annotate(views_count=Count('id'))
-            .order_by('-views_count')[:5]
+            .values_list('teacher_id')
+            .annotate(c=Count('id'))
         )
-        teacher_ids = [item['teacher_id'] for item in top_teach_data]
-        teachers_by_id = {u.id: u for u in CustomUser.objects.filter(id__in=teacher_ids)}
-        top_teachers = []
-        for item in top_teach_data:
-            teach = teachers_by_id.get(item['teacher_id'])
-            if teach:
-                top_teachers.append({
-                    'teacher': teach,
-                    'views_count': item['views_count'],
-                })
+
+        # ВСЕ материалы (в том числе с нулём просмотров)
+        materials = list(Material.objects.select_related('author'))
+        materials_stats = [
+            {'material': m, 'views_count': mat_views.get(m.id, 0)}
+            for m in materials
+        ]
+        materials_stats.sort(
+            key=lambda x: (-x['views_count'], x['material'].title.lower())
+        )
+
+        # ВСЕ педагоги и администраторы (проверьте имена флагов)
+        teachers = list(
+            CustomUser.objects.filter(
+                Q(role__in=['teacher', 'admin'])  # ← ваши значения role
+                | Q(materials__isnull=False)
+                | Q(id__in=teacher_views.keys())
+            ).distinct()
+        )
+        teachers_stats = [
+            {'teacher': t, 'views_count': teacher_views.get(t.id, 0)}
+            for t in teachers
+        ]
+        teachers_stats.sort(
+            key=lambda x: (-x['views_count'], x['teacher'].display_name.lower())
+        )
 
         context.update({
             'period': stats['period'],
             'total_visits': stats['total_visits'],
             'unique_sessions': stats['unique_sessions'],
-            'top_materials': top_materials,
-            'top_teachers': top_teachers,
             'chart_labels': stats['chart_labels'],
             'chart_data': stats['chart_data'],
+            'materials_stats': materials_stats,
+            'teachers_stats': teachers_stats,
+            'materials_total': len(materials_stats),
+            'materials_with_views': sum(1 for x in materials_stats if x['views_count']),
+            'teachers_total': len(teachers_stats),
+            'teachers_with_views': sum(1 for x in teachers_stats if x['views_count']),
         })
         return context
-
 
 class MaterialStatsView(AdminRequiredMixin, TemplateView):
     """Детальная страница статистики посещений конкретного учебного материала."""
